@@ -4,6 +4,7 @@ Modern blue-themed WTS careers web app with:
 
 - Candidate-facing job board with category filters
 - Application form with resume validation (`.pdf`/`.docx`)
+- Optional Google Sheets tracker for application submissions
 - Internal `/admin` area to add/remove job listings
 - Local JSON persistence for development
 - Google Drive JSON persistence for Vercel deployments
@@ -69,6 +70,8 @@ Open `http://localhost:3000`.
    - `GOOGLE_DRIVE_FOLDER_ID`
    - Optional: `GOOGLE_JOBS_FILE_NAME` (default `jobs.json`)
    - Optional: `GOOGLE_SUBMISSIONS_FILE_NAME` (default `submissions.json`)
+   - Optional: `GOOGLE_SHEETS_SPREADSHEET_ID` (enable submission row appends)
+   - Optional: `GOOGLE_SHEETS_TAB_NAME` (default `Application Submissions`)
 6. Redeploy.
 
 Build command and output use Next.js defaults (`npm run build`).
@@ -77,3 +80,21 @@ Build command and output use Next.js defaults (`npm run build`).
 
 - If Google env vars are configured, runtime uses Drive-backed stores.
 - If Google env vars are not configured, runtime falls back to local JSON in `data/`.
+
+## Google Sheets Submission Tracker
+
+When `GOOGLE_SHEETS_SPREADSHEET_ID` is set, each successful application appends
+a row to the configured sheet tab with:
+
+- Submitted timestamp and submission id
+- Job id and role title
+- Applicant name, email, company, and location
+- Role-interest answer
+- Resume file name, size, and Drive file URL (when available)
+
+Setup:
+
+1. Create a Google Sheet and copy its spreadsheet ID from the URL.
+2. Set `GOOGLE_SHEETS_SPREADSHEET_ID` in your env vars (and optionally `GOOGLE_SHEETS_TAB_NAME`).
+3. Share the sheet with your service account email (`GOOGLE_CLIENT_EMAIL`) as Editor.
+4. Ensure the Google Sheets API is enabled in the same Google Cloud project.

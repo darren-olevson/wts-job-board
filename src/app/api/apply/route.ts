@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { applicationStore } from "@/lib/services";
+import { appendApplicationSubmissionRow } from "@/lib/services/google-sheets-tracker";
 
 const ACCEPTED_EXTENSIONS = [".pdf", ".docx"];
 
@@ -52,7 +53,7 @@ export async function POST(request: Request) {
     }
 
     const resumeBuffer = Buffer.from(await resume.arrayBuffer());
-    await applicationStore.add({
+    const saved = await applicationStore.add({
       jobId,
       jobTitle,
       fullName,
@@ -65,6 +66,8 @@ export async function POST(request: Request) {
       resumeMimeType: resume.type || undefined,
       resumeBuffer,
     });
+
+    await appendApplicationSubmissionRow(saved);
 
     return NextResponse.json({ message: "Submission successful." });
   } catch (error) {
