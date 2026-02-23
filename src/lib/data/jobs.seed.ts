@@ -1,3 +1,4 @@
+import { DEFAULT_ABOUT_WTS } from "@/lib/constants/about-wts";
 import { JobListing } from "@/lib/types";
 
 export const seedJobs: JobListing[] = [
@@ -7,8 +8,7 @@ export const seedJobs: JobListing[] = [
     team: "Engineering",
     location: "Remote",
     type: "Full-time",
-    aboutWts:
-      "WTS builds modern logistics and operations software to help teams move faster with better visibility and control.",
+    aboutWts: DEFAULT_ABOUT_WTS,
     aboutTeam:
       "The engineering team owns the core platform powering internal workflows and customer-facing experiences.",
     aboutRole:
@@ -21,8 +21,7 @@ export const seedJobs: JobListing[] = [
     team: "Product Management",
     location: "Remote",
     type: "Full-time",
-    aboutWts:
-      "WTS builds modern logistics and operations software to help teams move faster with better visibility and control.",
+    aboutWts: DEFAULT_ABOUT_WTS,
     aboutTeam:
       "The platform product team defines and prioritizes initiatives that unlock scale across the business.",
     aboutRole:
@@ -35,8 +34,7 @@ export const seedJobs: JobListing[] = [
     team: "Design",
     location: "Remote",
     type: "Full-time",
-    aboutWts:
-      "WTS builds modern logistics and operations software to help teams move faster with better visibility and control.",
+    aboutWts: DEFAULT_ABOUT_WTS,
     aboutTeam:
       "Design works closely with product and engineering to simplify complex operational workflows.",
     aboutRole:
@@ -49,8 +47,7 @@ export const seedJobs: JobListing[] = [
     team: "Marketing",
     location: "Remote",
     type: "Full-time",
-    aboutWts:
-      "WTS builds modern logistics and operations software to help teams move faster with better visibility and control.",
+    aboutWts: DEFAULT_ABOUT_WTS,
     aboutTeam:
       "The growth team drives awareness, demand generation, and measurable pipeline impact.",
     aboutRole:
@@ -63,8 +60,7 @@ export const seedJobs: JobListing[] = [
     team: "Operations",
     location: "Remote",
     type: "Full-time",
-    aboutWts:
-      "WTS builds modern logistics and operations software to help teams move faster with better visibility and control.",
+    aboutWts: DEFAULT_ABOUT_WTS,
     aboutTeam:
       "Operations coordinates execution across teams to keep service delivery consistent and reliable.",
     aboutRole:

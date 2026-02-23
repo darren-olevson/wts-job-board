@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { JobDetailLayout } from "@/components/job-detail-layout";
+import { DEFAULT_ABOUT_WTS, LEGACY_ABOUT_WTS } from "@/lib/constants/about-wts";
 import { jobStore } from "@/lib/services";
 
 type JobDetailPageProps = {
@@ -16,9 +17,11 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
     notFound();
   }
 
+  const savedAboutWts = job.aboutWts?.trim() ?? "";
   const aboutWts =
-    job.aboutWts?.trim() ||
-    "WTS builds modern logistics and operations software to help teams move faster with better visibility and control.";
+    !savedAboutWts || savedAboutWts === LEGACY_ABOUT_WTS
+      ? DEFAULT_ABOUT_WTS
+      : savedAboutWts;
   const aboutTeam = job.aboutTeam?.trim() || job.summary?.trim() || "";
   const aboutRole = job.aboutRole?.trim() || job.description?.trim() || "";
 

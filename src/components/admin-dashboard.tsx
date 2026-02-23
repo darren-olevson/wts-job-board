@@ -14,22 +14,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { DEFAULT_ABOUT_WTS } from "@/lib/constants/about-wts";
 import { JOB_CATEGORIES, JobListing } from "@/lib/types";
 
 type AdminDashboardProps = {
   jobs: JobListing[];
 };
-
-const DEFAULT_ABOUT_WTS = `WTS builds the operational and technology backbone that powers modern fintech. We partner with product, engineering, compliance, and operations teams to launch and scale financial products-turning complex workflows (accounts, money movement, reconciliation, reporting, risk) into reliable platforms and tools.
-
-**We move fast, sweat the details, and build systems that are secure and built to last.**
-
-**What it's like to work here**
-
-**High ownership, high impact:** Small teams, real responsibility, measurable outcomes
-**Cross-functional by default:** Frequent collaboration with engineering, ops, and business stakeholders
-**Practical builders:** We favor solutions that are simple, scalable, and easy to operate
-**Mission-driven:** We help bring better financial products to market-safely and efficiently`;
 
 export function AdminDashboard({ jobs }: AdminDashboardProps) {
   const router = useRouter();

@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
 
+import { DEFAULT_ABOUT_WTS } from "@/lib/constants/about-wts";
 import { isAdminAuthenticated } from "@/lib/server/admin-auth";
 import { jobStore } from "@/lib/services";
 import { JOB_CATEGORIES, JobListing } from "@/lib/types";
-
-const DEFAULT_ABOUT_WTS =
-  "WTS builds the operational and technology backbone that powers modern fintech. We partner with product, engineering, compliance, and operations teams to launch and scale financial products-turning complex workflows (accounts, money movement, reconciliation, reporting, risk) into reliable platforms and tools.\n\n**We move fast, sweat the details, and build systems that are secure and built to last.**\n\n**What it's like to work here**\n\n**High ownership, high impact:** Small teams, real responsibility, measurable outcomes\n**Cross-functional by default:** Frequent collaboration with engineering, ops, and business stakeholders\n**Practical builders:** We favor solutions that are simple, scalable, and easy to operate\n**Mission-driven:** We help bring better financial products to market-safely and efficiently";
 
 function isEmploymentType(
   value: string,
