@@ -173,7 +173,6 @@ async function readJsonFile<T>(fileName: string, fallback: T): Promise<T> {
       }),
     }).catch(() => {});
     // #endregion
-    await createJsonFile(fileName, fallback);
     return fallback;
   }
 
