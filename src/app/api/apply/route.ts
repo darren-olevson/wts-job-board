@@ -71,6 +71,21 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ message: "Submission successful." });
   } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    // #region agent log
+    fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        runId: "sheets-tracker-debug",
+        hypothesisId: "H5",
+        location: "src/app/api/apply/route.ts:74",
+        message: "Apply route failed while persisting submission",
+        data: { errorMessage: message },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+    // #endregion
     console.error("Application submission failed", error);
     return NextResponse.json(
       { error: "Unable to submit application right now. Please try again." },

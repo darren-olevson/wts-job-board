@@ -66,12 +66,66 @@ function getSheetsClient() {
 export async function appendApplicationSubmissionRow(
   submission: JobApplication,
 ) {
-  if (!isGoogleSheetsConfigured()) {
+  const isConfigured = isGoogleSheetsConfigured();
+  // #region agent log
+  fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      runId: "sheets-tracker-debug",
+      hypothesisId: "H1",
+      location: "src/lib/services/google-sheets-tracker.ts:69",
+      message: "Sheets tracker config check",
+      data: {
+        isConfigured,
+        hasProjectId: Boolean(process.env.GOOGLE_PROJECT_ID),
+        hasClientEmail: Boolean(process.env.GOOGLE_CLIENT_EMAIL),
+        hasPrivateKey: Boolean(process.env.GOOGLE_PRIVATE_KEY),
+        hasSpreadsheetId: Boolean(process.env.GOOGLE_SHEETS_SPREADSHEET_ID),
+      },
+      timestamp: Date.now(),
+    }),
+  }).catch(() => {});
+  // #endregion
+  if (!isConfigured) {
+    // #region agent log
+    fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        runId: "sheets-tracker-debug",
+        hypothesisId: "H1",
+        location: "src/lib/services/google-sheets-tracker.ts:88",
+        message: "Sheets append skipped due to missing config",
+        data: { submissionId: submission.id, jobId: submission.jobId },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+    // #endregion
     return;
   }
 
   const sheets = getSheetsClient();
   const { spreadsheetId, sheetTabName } = getSheetsConfig();
+  // #region agent log
+  fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      runId: "sheets-tracker-debug",
+      hypothesisId: "H2",
+      location: "src/lib/services/google-sheets-tracker.ts:99",
+      message: "Attempting sheets row append",
+      data: {
+        submissionId: submission.id,
+        jobId: submission.jobId,
+        spreadsheetIdPrefix: spreadsheetId.slice(0, 8),
+        sheetTabName,
+      },
+      timestamp: Date.now(),
+    }),
+  }).catch(() => {});
+  // #endregion
   const values = [
     [
       submission.submittedAt,
@@ -89,11 +143,59 @@ export async function appendApplicationSubmissionRow(
     ],
   ];
 
-  await sheets.spreadsheets.values.append({
-    spreadsheetId,
-    range: `${sheetTabName}!A:L`,
-    valueInputOption: "USER_ENTERED",
-    insertDataOption: "INSERT_ROWS",
-    requestBody: { values },
-  });
+  try {
+    const response = await sheets.spreadsheets.values.append({
+      spreadsheetId,
+      range: `${sheetTabName}!A:L`,
+      valueInputOption: "USER_ENTERED",
+      insertDataOption: "INSERT_ROWS",
+      requestBody: { values },
+    });
+    // #region agent log
+    fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        runId: "sheets-tracker-debug",
+        hypothesisId: "H3",
+        location: "src/lib/services/google-sheets-tracker.ts:127",
+        message: "Sheets row append succeeded",
+        data: {
+          submissionId: submission.id,
+          updatedRange: response.data.updates?.updatedRange ?? null,
+          updatedRows: response.data.updates?.updatedRows ?? null,
+        },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+    // #endregion
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    const status =
+      typeof error === "object" &&
+      error !== null &&
+      "status" in error &&
+      typeof (error as { status?: unknown }).status === "number"
+        ? (error as { status: number }).status
+        : null;
+    // #region agent log
+    fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        runId: "sheets-tracker-debug",
+        hypothesisId: "H4",
+        location: "src/lib/services/google-sheets-tracker.ts:145",
+        message: "Sheets row append failed",
+        data: {
+          submissionId: submission.id,
+          status,
+          errorMessage: message,
+        },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+    // #endregion
+    throw error;
+  }
 }
