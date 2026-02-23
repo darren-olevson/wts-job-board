@@ -12,20 +12,6 @@ function isEmploymentType(
 
 export async function POST(request: Request) {
   const isAuthed = await isAdminAuthenticated();
-  // #region agent log
-  fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      runId: "admin-create-job-debug",
-      hypothesisId: "H4",
-      location: "src/app/api/admin/jobs/route.ts:14",
-      message: "Admin create route entered",
-      data: { isAuthed },
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {});
-  // #endregion
   if (!isAuthed) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
@@ -57,29 +43,6 @@ export async function POST(request: Request) {
   }
 
   try {
-    // #region agent log
-    fetch(
-      "http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          runId: "admin-create-job-debug",
-          hypothesisId: "H1",
-          location: "src/app/api/admin/jobs/route.ts:46",
-          message: "About to add job via configured store",
-          data: {
-            team,
-            type,
-            titleLength: title.length,
-            summaryLength: summary.length,
-            descriptionLength: description.length,
-          },
-          timestamp: Date.now(),
-        }),
-      },
-    ).catch(() => {});
-    // #endregion
     const job = await jobStore.add({
       title,
       team: team as (typeof JOB_CATEGORIES)[number],
@@ -105,25 +68,6 @@ export async function POST(request: Request) {
       typeof (error as { status?: unknown }).status === "number"
         ? (error as { status: number }).status
         : undefined;
-
-    // #region agent log
-    fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        runId: "admin-create-job-debug",
-        hypothesisId: "H2",
-        location: "src/app/api/admin/jobs/route.ts:63",
-        message: "Job create failed in store",
-        data: {
-          errorCode: errorCode ?? null,
-          errorStatus: errorStatus ?? null,
-          errorMessage,
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
 
     if (errorCode === "EROFS" || errorCode === "EPERM") {
       return NextResponse.json(

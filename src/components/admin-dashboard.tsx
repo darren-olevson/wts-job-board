@@ -28,23 +28,6 @@ export function AdminDashboard({ jobs }: AdminDashboardProps) {
   async function readApiError(response: Response, fallback: string) {
     try {
       const result = (await response.json()) as { error?: string };
-      // #region agent log
-      fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          runId: "admin-create-job-debug",
-          hypothesisId: "H6",
-          location: "src/components/admin-dashboard.tsx:30",
-          message: "Client parsed API error payload",
-          data: {
-            status: response.status,
-            apiError: result.error ?? null,
-          },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
       return result.error ?? fallback;
     } catch {
       return fallback;
@@ -67,72 +50,18 @@ export function AdminDashboard({ jobs }: AdminDashboardProps) {
     };
 
     try {
-      // #region agent log
-      fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          runId: "admin-create-job-debug",
-          hypothesisId: "H6",
-          location: "src/components/admin-dashboard.tsx:52",
-          message: "Client submitting admin create request",
-          data: {
-            team: payload.team,
-            type: payload.type,
-            titleLength: payload.title.length,
-            summaryLength: payload.summary.length,
-            descriptionLength: payload.description.length,
-          },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
       const response = await fetch("/api/admin/jobs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      // #region agent log
-      fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          runId: "admin-create-job-debug",
-          hypothesisId: "H6",
-          location: "src/components/admin-dashboard.tsx:58",
-          message: "Client received admin create response",
-          data: {
-            status: response.status,
-            ok: response.ok,
-          },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
       if (!response.ok) {
         setError(await readApiError(response, "Unable to create job."));
         return;
       }
       form.reset();
       router.refresh();
-    } catch (error) {
-      // #region agent log
-      fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          runId: "admin-create-job-debug",
-          hypothesisId: "H7",
-          location: "src/components/admin-dashboard.tsx:64",
-          message: "Client create request failed before response",
-          data: {
-            errorMessage:
-              error instanceof Error ? error.message : String(error),
-          },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
+    } catch {
       setError("Unable to create job.");
     } finally {
       setIsSaving(false);

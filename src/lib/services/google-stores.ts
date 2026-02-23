@@ -57,24 +57,6 @@ function getDrive() {
   }
 
   const { projectId, clientEmail, privateKey } = getAuthConfig();
-  // #region agent log
-  fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      runId: "admin-create-job-debug",
-      hypothesisId: "H2",
-      location: "src/lib/services/google-stores.ts:58",
-      message: "Initializing Google Drive client",
-      data: {
-        projectId,
-        clientEmailDomain: clientEmail.split("@")[1] ?? "unknown",
-        privateKeyLength: privateKey.length,
-      },
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {});
-  // #endregion
   const auth = new JWT({
     email: clientEmail,
     key: privateKey,
@@ -111,24 +93,6 @@ async function findFileIdByName(fileName: string) {
     supportsAllDrives: true,
     pageSize: 1,
   });
-  // #region agent log
-  fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      runId: "admin-create-job-debug",
-      hypothesisId: "H3",
-      location: "src/lib/services/google-stores.ts:95",
-      message: "Drive file lookup completed",
-      data: {
-        fileName,
-        folderIdPrefix: folderId.slice(0, 6),
-        matches: response.data.files?.length ?? 0,
-      },
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {});
-  // #endregion
 
   return response.data.files?.[0]?.id ?? null;
 }
@@ -160,20 +124,6 @@ async function readJsonFile<T>(fileName: string, fallback: T): Promise<T> {
   const fileId = await findFileIdByName(fileName);
 
   if (!fileId) {
-    // #region agent log
-    fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        runId: "admin-create-job-debug",
-        hypothesisId: "H3",
-        location: "src/lib/services/google-stores.ts:127",
-        message: "Drive JSON file missing, creating fallback file",
-        data: { fileName },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
     return fallback;
   }
 
@@ -202,24 +152,6 @@ async function writeJsonFile<T>(fileName: string, data: T): Promise<void> {
   const drive = getDrive();
   const json = JSON.stringify(data, null, 2);
   const existingId = await findFileIdByName(fileName);
-  // #region agent log
-  fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      runId: "admin-create-job-debug",
-      hypothesisId: "H5",
-      location: "src/lib/services/google-stores.ts:156",
-      message: "Persisting JSON file to Drive",
-      data: {
-        fileName,
-        hasExistingId: Boolean(existingId),
-        payloadSize: json.length,
-      },
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {});
-  // #endregion
 
   if (existingId) {
     await drive.files.update({
@@ -256,37 +188,12 @@ async function uploadResumeToDrive(
   application: CreateApplicationInput,
 ): Promise<{ fileId: string; fileUrl: string } | null> {
   if (!application.resumeBuffer || application.resumeBuffer.length === 0) {
-    console.warn("[google-stores] resume buffer missing, skipping upload", {
-      hypothesisId: "H11",
-      jobId: application.jobId,
-      resumeFileName: application.resumeFileName,
-      resumeBufferLength: application.resumeBuffer?.length ?? 0,
-    });
     return null;
   }
 
   const drive = getDrive();
   const { folderId } = getAuthConfig();
   const uploadedFileName = `${application.jobId}-${Date.now()}-${sanitizeFileName(application.resumeFileName)}`;
-  // #region agent log
-  fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      runId: "job-apply-debug",
-      hypothesisId: "H8",
-      location: "src/lib/services/google-stores.ts:258",
-      message: "Uploading resume file to Google Drive",
-      data: {
-        folderIdPrefix: folderId.slice(0, 6),
-        uploadedFileName,
-        size: application.resumeBuffer.length,
-        mimeType: application.resumeMimeType ?? "application/octet-stream",
-      },
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {});
-  // #endregion
 
   const response = await drive.files.create({
     requestBody: {
@@ -306,28 +213,6 @@ async function uploadResumeToDrive(
   if (!fileId) {
     throw new Error("Drive upload succeeded without file id.");
   }
-
-  console.info("[google-stores] resume uploaded", {
-    hypothesisId: "H11",
-    jobId: application.jobId,
-    resumeFileName: application.resumeFileName,
-    fileId,
-  });
-
-  // #region agent log
-  fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      runId: "job-apply-debug",
-      hypothesisId: "H8",
-      location: "src/lib/services/google-stores.ts:290",
-      message: "Resume file uploaded to Google Drive",
-      data: { fileId },
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {});
-  // #endregion
 
   return {
     fileId,

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { applicationStore, isGoogleDriveConfigured } from "@/lib/services";
+import { applicationStore } from "@/lib/services";
 
 const ACCEPTED_EXTENSIONS = [".pdf", ".docx"];
 
@@ -11,7 +11,6 @@ function hasAllowedExtension(fileName: string) {
 
 export async function POST(request: Request) {
   try {
-    const usingGoogleStore = isGoogleDriveConfigured();
     const formData = await request.formData();
 
     const fullName = String(formData.get("fullName") ?? "").trim();
@@ -22,29 +21,6 @@ export async function POST(request: Request) {
     const jobId = String(formData.get("jobId") ?? "").trim();
     const jobTitle = String(formData.get("jobTitle") ?? "").trim();
     const resume = formData.get("resume");
-    // #region agent log
-    fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        runId: "job-apply-debug",
-        hypothesisId: "H3",
-        location: "src/app/api/apply/route.ts:24",
-        message: "Apply route parsed form payload",
-        data: {
-          hasFullName: Boolean(fullName),
-          hasEmail: Boolean(email),
-          hasCurrentCompany: Boolean(currentCompany),
-          hasCurrentLocation: Boolean(currentLocation),
-          hasRoleInterest: Boolean(roleInterest),
-          hasJobId: Boolean(jobId),
-          hasJobTitle: Boolean(jobTitle),
-          resumeIsFile: resume instanceof File,
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
 
     if (
       !fullName ||
@@ -67,24 +43,6 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-    // #region agent log
-    fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        runId: "job-apply-debug",
-        hypothesisId: "H4",
-        location: "src/app/api/apply/route.ts:50",
-        message: "Resume file received and inspected",
-        data: {
-          resumeName: resume.name,
-          resumeSize: resume.size,
-          allowedExtension: hasAllowedExtension(resume.name),
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
 
     if (!hasAllowedExtension(resume.name)) {
       return NextResponse.json(
@@ -94,27 +52,7 @@ export async function POST(request: Request) {
     }
 
     const resumeBuffer = Buffer.from(await resume.arrayBuffer());
-
-    // #region agent log
-    fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        runId: "job-apply-debug",
-        hypothesisId: "H1",
-        location: "src/app/api/apply/route.ts:64",
-        message: "About to persist application via configured store",
-        data: {
-          jobId,
-          jobTitleLength: jobTitle.length,
-          resumeSize: resume.size,
-          resumeMimeType: resume.type || null,
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
-    const saved = await applicationStore.add({
+    await applicationStore.add({
       jobId,
       jobTitle,
       fullName,
@@ -128,52 +66,8 @@ export async function POST(request: Request) {
       resumeBuffer,
     });
 
-    console.info("[apply-route] submission persisted", {
-      hypothesisId: "H9",
-      usingGoogleStore,
-      resumeSize: resume.size,
-      resumeFileName: resume.name,
-      hasResumeDriveFileId:
-        typeof saved.resumeDriveFileId === "string" &&
-        saved.resumeDriveFileId.length > 0,
-      resumeDriveFileId: saved.resumeDriveFileId ?? null,
-      resumeDriveFileUrl: saved.resumeDriveFileUrl ?? null,
-    });
-
-    return NextResponse.json({
-      message: "Submission successful.",
-      debug: {
-        usingGoogleStore,
-        resumeDriveFileId: saved.resumeDriveFileId ?? null,
-        resumeDriveFileUrl: saved.resumeDriveFileUrl ?? null,
-      },
-    });
+    return NextResponse.json({ message: "Submission successful." });
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    const errorCode =
-      typeof error === "object" &&
-      error !== null &&
-      "code" in error &&
-      typeof (error as { code?: unknown }).code === "string"
-        ? (error as { code: string }).code
-        : undefined;
-    // #region agent log
-    fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        runId: "job-apply-debug",
-        hypothesisId: "H2",
-        location: "src/app/api/apply/route.ts:86",
-        message: "Apply route failed",
-        data: {
-          errorCode: errorCode ?? null,
-          errorMessage,
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
     console.error("Application submission failed", error);
     return NextResponse.json(
       { error: "Unable to submit application right now. Please try again." },
