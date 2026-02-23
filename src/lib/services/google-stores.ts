@@ -1,5 +1,6 @@
 import { JWT } from "google-auth-library";
 import { drive_v3, google } from "googleapis";
+import { Readable } from "node:stream";
 
 import { seedJobs } from "@/lib/data/jobs.seed";
 import {
@@ -145,7 +146,7 @@ async function createJsonFile<T>(fileName: string, data: T) {
     },
     media: {
       mimeType: "application/json",
-      body: Buffer.from(json, "utf-8"),
+      body: Readable.from(Buffer.from(json, "utf-8")),
     },
     supportsAllDrives: true,
     fields: "id",
@@ -225,7 +226,7 @@ async function writeJsonFile<T>(fileName: string, data: T): Promise<void> {
       fileId: existingId,
       media: {
         mimeType: "application/json",
-        body: Buffer.from(json, "utf-8"),
+        body: Readable.from(Buffer.from(json, "utf-8")),
       },
       supportsAllDrives: true,
     });
@@ -245,6 +246,80 @@ function makeJobId(team: string, title: string) {
 
 function makeSubmissionId(jobId: string) {
   return `${jobId}-${Date.now()}`;
+}
+
+function sanitizeFileName(fileName: string) {
+  return fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
+}
+
+async function uploadResumeToDrive(
+  application: CreateApplicationInput,
+): Promise<{ fileId: string; fileUrl: string } | null> {
+  if (!application.resumeBuffer || application.resumeBuffer.length === 0) {
+    return null;
+  }
+
+  const drive = getDrive();
+  const { folderId } = getAuthConfig();
+  const uploadedFileName = `${application.jobId}-${Date.now()}-${sanitizeFileName(application.resumeFileName)}`;
+  // #region agent log
+  fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      runId: "job-apply-debug",
+      hypothesisId: "H8",
+      location: "src/lib/services/google-stores.ts:258",
+      message: "Uploading resume file to Google Drive",
+      data: {
+        folderIdPrefix: folderId.slice(0, 6),
+        uploadedFileName,
+        size: application.resumeBuffer.length,
+        mimeType: application.resumeMimeType ?? "application/octet-stream",
+      },
+      timestamp: Date.now(),
+    }),
+  }).catch(() => {});
+  // #endregion
+
+  const response = await drive.files.create({
+    requestBody: {
+      name: uploadedFileName,
+      parents: [folderId],
+      mimeType: application.resumeMimeType || "application/octet-stream",
+    },
+    media: {
+      mimeType: application.resumeMimeType || "application/octet-stream",
+      body: Readable.from(application.resumeBuffer),
+    },
+    supportsAllDrives: true,
+    fields: "id",
+  });
+
+  const fileId = response.data.id;
+  if (!fileId) {
+    throw new Error("Drive upload succeeded without file id.");
+  }
+
+  // #region agent log
+  fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      runId: "job-apply-debug",
+      hypothesisId: "H8",
+      location: "src/lib/services/google-stores.ts:290",
+      message: "Resume file uploaded to Google Drive",
+      data: { fileId },
+      timestamp: Date.now(),
+    }),
+  }).catch(() => {});
+  // #endregion
+
+  return {
+    fileId,
+    fileUrl: `https://drive.google.com/file/d/${fileId}/view`,
+  };
 }
 
 export const googleJobStore: JobStore = {
@@ -276,12 +351,23 @@ export const googleJobStore: JobStore = {
 
 export const googleApplicationStore: ApplicationStore = {
   async add(application: CreateApplicationInput): Promise<JobApplication> {
+    const resumeUpload = await uploadResumeToDrive(application);
     const submissions = await readJsonFile<JobApplication[]>(
       getSubmissionsFileName(),
       [],
     );
     const next: JobApplication = {
-      ...application,
+      jobId: application.jobId,
+      jobTitle: application.jobTitle,
+      fullName: application.fullName,
+      email: application.email,
+      currentCompany: application.currentCompany,
+      currentLocation: application.currentLocation,
+      roleInterest: application.roleInterest,
+      resumeFileName: application.resumeFileName,
+      resumeFileSize: application.resumeFileSize,
+      resumeDriveFileId: resumeUpload?.fileId,
+      resumeDriveFileUrl: resumeUpload?.fileUrl,
       id: makeSubmissionId(application.jobId),
       submittedAt: new Date().toISOString(),
     };

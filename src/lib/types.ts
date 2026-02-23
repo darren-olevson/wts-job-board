@@ -30,5 +30,7 @@ export type JobApplication = {
   roleInterest: string;
   resumeFileName: string;
   resumeFileSize: number;
+  resumeDriveFileId?: string;
+  resumeDriveFileUrl?: string;
   submittedAt: string;
 };

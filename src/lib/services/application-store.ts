@@ -1,6 +1,19 @@
 import { JobApplication } from "@/lib/types";
 
-export type CreateApplicationInput = Omit<JobApplication, "id" | "submittedAt">;
+export type CreateApplicationInput = {
+  jobId: string;
+  jobTitle: string;
+  fullName: string;
+  email: string;
+  currentCompany: string;
+  currentLocation: string;
+  roleInterest: string;
+  resumeFileName: string;
+  resumeFileSize: number;
+  // Runtime-only fields used by storage implementations that persist actual files.
+  resumeMimeType?: string;
+  resumeBuffer?: Buffer;
+};
 
 export interface ApplicationStore {
   add: (application: CreateApplicationInput) => Promise<JobApplication>;

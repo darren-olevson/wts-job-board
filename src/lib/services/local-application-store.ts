@@ -13,7 +13,15 @@ export const localApplicationStore: ApplicationStore = {
   async add(application: CreateApplicationInput): Promise<JobApplication> {
     const submissions = await getSubmissions();
     const next: JobApplication = {
-      ...application,
+      jobId: application.jobId,
+      jobTitle: application.jobTitle,
+      fullName: application.fullName,
+      email: application.email,
+      currentCompany: application.currentCompany,
+      currentLocation: application.currentLocation,
+      roleInterest: application.roleInterest,
+      resumeFileName: application.resumeFileName,
+      resumeFileSize: application.resumeFileSize,
       id: createSubmissionId(application.jobId),
       submittedAt: new Date().toISOString(),
     };

@@ -37,11 +37,47 @@ export function ApplyForm({ jobId, jobTitle }: ApplyFormProps) {
     const timeoutId = setTimeout(() => controller.abort(), 20000);
 
     try {
+      // #region agent log
+      fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          runId: "job-apply-debug",
+          hypothesisId: "H5",
+          location: "src/components/apply-form.tsx:40",
+          message: "Client submit started",
+          data: {
+            jobId,
+            jobTitleLength: jobTitle.length,
+            resumeFieldPresent: formData.get("resume") instanceof File,
+          },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+      // #endregion
       const response = await fetch("/api/apply", {
         method: "POST",
         body: formData,
         signal: controller.signal,
       });
+      // #region agent log
+      fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          runId: "job-apply-debug",
+          hypothesisId: "H5",
+          location: "src/components/apply-form.tsx:51",
+          message: "Client submit received response",
+          data: {
+            status: response.status,
+            ok: response.ok,
+            contentType: response.headers.get("content-type") ?? null,
+          },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+      // #endregion
 
       let payload: { message?: string; error?: string } = {};
       const isJsonResponse = response.headers
@@ -67,6 +103,28 @@ export function ApplyForm({ jobId, jobTitle }: ApplyFormProps) {
           : error instanceof Error
             ? error.message
             : "unknown network error";
+      // #region agent log
+      fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          runId: "job-apply-debug",
+          hypothesisId: "H6",
+          location: "src/components/apply-form.tsx:80",
+          message: "Client submit failed before successful completion",
+          data: {
+            errorDetails: details,
+            errorType:
+              error instanceof DOMException
+                ? error.name
+                : error instanceof Error
+                  ? "Error"
+                  : typeof error,
+          },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+      // #endregion
       setError(`Unable to submit right now (${details}). Please try again.`);
     } finally {
       clearTimeout(timeoutId);
