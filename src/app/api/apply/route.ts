@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { applicationStore } from "@/lib/services";
+import { applicationStore, isGoogleDriveConfigured } from "@/lib/services";
 
 const ACCEPTED_EXTENSIONS = [".pdf", ".docx"];
 
@@ -11,6 +11,7 @@ function hasAllowedExtension(fileName: string) {
 
 export async function POST(request: Request) {
   try {
+    const usingGoogleStore = isGoogleDriveConfigured();
     const formData = await request.formData();
 
     const fullName = String(formData.get("fullName") ?? "").trim();
@@ -113,7 +114,7 @@ export async function POST(request: Request) {
       }),
     }).catch(() => {});
     // #endregion
-    await applicationStore.add({
+    const saved = await applicationStore.add({
       jobId,
       jobTitle,
       fullName,
@@ -125,6 +126,18 @@ export async function POST(request: Request) {
       resumeFileSize: resume.size,
       resumeMimeType: resume.type || undefined,
       resumeBuffer,
+    });
+
+    console.info("[apply-route] submission persisted", {
+      hypothesisId: "H9",
+      usingGoogleStore,
+      resumeSize: resume.size,
+      resumeFileName: resume.name,
+      hasResumeDriveFileId:
+        typeof saved.resumeDriveFileId === "string" &&
+        saved.resumeDriveFileId.length > 0,
+      resumeDriveFileId: saved.resumeDriveFileId ?? null,
+      resumeDriveFileUrl: saved.resumeDriveFileUrl ?? null,
     });
 
     return NextResponse.json({ message: "Submission successful." });

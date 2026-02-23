@@ -256,6 +256,12 @@ async function uploadResumeToDrive(
   application: CreateApplicationInput,
 ): Promise<{ fileId: string; fileUrl: string } | null> {
   if (!application.resumeBuffer || application.resumeBuffer.length === 0) {
+    console.warn("[google-stores] resume buffer missing, skipping upload", {
+      hypothesisId: "H11",
+      jobId: application.jobId,
+      resumeFileName: application.resumeFileName,
+      resumeBufferLength: application.resumeBuffer?.length ?? 0,
+    });
     return null;
   }
 
@@ -300,6 +306,13 @@ async function uploadResumeToDrive(
   if (!fileId) {
     throw new Error("Drive upload succeeded without file id.");
   }
+
+  console.info("[google-stores] resume uploaded", {
+    hypothesisId: "H11",
+    jobId: application.jobId,
+    resumeFileName: application.resumeFileName,
+    fileId,
+  });
 
   // #region agent log
   fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
