@@ -4,6 +4,8 @@ import { JobBoard } from "@/components/job-board";
 import { Button } from "@/components/ui/button";
 import { jobStore } from "@/lib/services";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const jobs = await jobStore.list();
 
