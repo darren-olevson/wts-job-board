@@ -162,6 +162,9 @@ export async function appendApplicationSubmissionRow(
       submission.currentCompany,
       submission.currentLocation,
       submission.referredBy ?? "",
+      submission.linkedinUrl ?? "",
+      submission.githubUrl ?? "",
+      submission.portfolioUrl ?? "",
       submission.roleInterest,
       submission.resumeDriveFileUrl ?? "",
     ],
@@ -170,7 +173,7 @@ export async function appendApplicationSubmissionRow(
   try {
     const response = await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: `${sheetTabName}!A:I`,
+      range: `${sheetTabName}!A:L`,
       valueInputOption: "USER_ENTERED",
       insertDataOption: "INSERT_ROWS",
       requestBody: { values },

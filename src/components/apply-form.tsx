@@ -89,19 +89,19 @@ export function ApplyForm({ jobId, jobTitle }: ApplyFormProps) {
 
       <form className="grid gap-4" onSubmit={handleSubmit}>
         <div className="grid gap-2">
-          <Label htmlFor="fullName">Full name</Label>
+          <Label htmlFor="fullName">Full name *</Label>
           <Input id="fullName" name="fullName" required />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">Email *</Label>
           <Input id="email" name="email" type="email" required />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="currentCompany">Current company</Label>
+          <Label htmlFor="currentCompany">Current company *</Label>
           <Input id="currentCompany" name="currentCompany" required />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="currentLocation">Current location</Label>
+          <Label htmlFor="currentLocation">Current location *</Label>
           <Input id="currentLocation" name="currentLocation" required />
         </div>
         <div className="grid gap-2">
@@ -109,11 +109,38 @@ export function ApplyForm({ jobId, jobTitle }: ApplyFormProps) {
           <Input id="referredBy" name="referredBy" />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="roleInterest">Why are you interested in this role?</Label>
+          <Label htmlFor="linkedinUrl">LinkedIn (optional)</Label>
+          <Input
+            id="linkedinUrl"
+            name="linkedinUrl"
+            type="url"
+            placeholder="https://linkedin.com/in/username"
+          />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="githubUrl">GitHub (optional)</Label>
+          <Input
+            id="githubUrl"
+            name="githubUrl"
+            type="url"
+            placeholder="https://github.com/username"
+          />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="portfolioUrl">Portfolio (optional)</Label>
+          <Input
+            id="portfolioUrl"
+            name="portfolioUrl"
+            type="url"
+            placeholder="https://your-portfolio.com"
+          />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="roleInterest">Why are you interested in this role? *</Label>
           <Textarea id="roleInterest" name="roleInterest" rows={5} required />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="resume">Resume (.pdf or .docx)</Label>
+          <Label htmlFor="resume">Resume (.pdf or .docx) *</Label>
           <Input
             id="resume"
             name="resume"

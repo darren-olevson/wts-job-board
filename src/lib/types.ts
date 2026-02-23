@@ -31,6 +31,9 @@ export type JobApplication = {
   currentCompany: string;
   currentLocation: string;
   referredBy?: string;
+  linkedinUrl?: string;
+  githubUrl?: string;
+  portfolioUrl?: string;
   roleInterest: string;
   resumeFileName: string;
   resumeFileSize: number;

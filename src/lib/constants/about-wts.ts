@@ -7,7 +7,7 @@ We move fast, sweat the details, and build systems that are secure and built to 
 
 What it's like to work here
 
-High ownership, high impact: Small teams, real responsibility, measurable outcomes
-Cross-functional by default: Frequent collaboration with engineering, ops, and business stakeholders
-Practical builders: We favor solutions that are simple, scalable, and easy to operate
-Mission-driven: We help bring better financial products to market-safely and efficiently`;
+- **High impact:** Small teams, real responsibility, measurable outcomes
+- **Cross-functional:** Frequent collaboration with engineering, ops, and business stakeholders
+- **Practical builders:** We favor solutions that are simple, scalable, and easy to operate
+- **Mission-driven:** We help bring better financial products to market-safely and efficiently`;

@@ -19,6 +19,9 @@ export async function POST(request: Request) {
     const currentCompany = String(formData.get("currentCompany") ?? "").trim();
     const currentLocation = String(formData.get("currentLocation") ?? "").trim();
     const referredBy = String(formData.get("referredBy") ?? "").trim();
+    const linkedinUrl = String(formData.get("linkedinUrl") ?? "").trim();
+    const githubUrl = String(formData.get("githubUrl") ?? "").trim();
+    const portfolioUrl = String(formData.get("portfolioUrl") ?? "").trim();
     const roleInterest = String(formData.get("roleInterest") ?? "").trim();
     const jobId = String(formData.get("jobId") ?? "").trim();
     const jobTitle = String(formData.get("jobTitle") ?? "").trim();
@@ -62,6 +65,9 @@ export async function POST(request: Request) {
       currentCompany,
       currentLocation,
       referredBy: referredBy || undefined,
+      linkedinUrl: linkedinUrl || undefined,
+      githubUrl: githubUrl || undefined,
+      portfolioUrl: portfolioUrl || undefined,
       roleInterest,
       resumeFileName: resume.name,
       resumeFileSize: resume.size,
