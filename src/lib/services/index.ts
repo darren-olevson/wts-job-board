@@ -42,3 +42,4 @@ export const jobStore = useGoogleDriveStore ? googleJobStore : localJobStore;
 export const applicationStore = useGoogleDriveStore
   ? googleApplicationStore
   : localApplicationStore;
+export { isGoogleDriveConfigured };
