@@ -4,7 +4,6 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -78,57 +77,59 @@ export function ApplyForm({ jobId, jobTitle }: ApplyFormProps) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Apply for {jobTitle}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form className="grid gap-4" onSubmit={handleSubmit}>
-          <div className="grid gap-2">
-            <Label htmlFor="fullName">Full name</Label>
-            <Input id="fullName" name="fullName" required />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" name="email" type="email" required />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="currentCompany">Current company</Label>
-            <Input id="currentCompany" name="currentCompany" required />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="currentLocation">Current location</Label>
-            <Input id="currentLocation" name="currentLocation" required />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="referredBy">Referred by (optional)</Label>
-            <Input id="referredBy" name="referredBy" />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="roleInterest">
-              Why are you interested in this role?
-            </Label>
-            <Textarea id="roleInterest" name="roleInterest" rows={5} required />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="resume">Resume (.pdf or .docx)</Label>
-            <Input
-              id="resume"
-              name="resume"
-              type="file"
-              required
-              accept={ACCEPTED_RESUME_TYPES.join(",")}
-            />
-          </div>
+    <section className="max-w-2xl space-y-6">
+      <div className="space-y-2">
+        <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+          Apply for {jobTitle}
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          Complete the application below and upload your resume.
+        </p>
+      </div>
 
-          {message && <p className="text-sm text-emerald-600">{message}</p>}
-          {error && <p className="text-sm text-destructive">{error}</p>}
+      <form className="grid gap-4" onSubmit={handleSubmit}>
+        <div className="grid gap-2">
+          <Label htmlFor="fullName">Full name</Label>
+          <Input id="fullName" name="fullName" required />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="email">Email</Label>
+          <Input id="email" name="email" type="email" required />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="currentCompany">Current company</Label>
+          <Input id="currentCompany" name="currentCompany" required />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="currentLocation">Current location</Label>
+          <Input id="currentLocation" name="currentLocation" required />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="referredBy">Referred by (optional)</Label>
+          <Input id="referredBy" name="referredBy" />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="roleInterest">Why are you interested in this role?</Label>
+          <Textarea id="roleInterest" name="roleInterest" rows={5} required />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="resume">Resume (.pdf or .docx)</Label>
+          <Input
+            id="resume"
+            name="resume"
+            type="file"
+            required
+            accept={ACCEPTED_RESUME_TYPES.join(",")}
+          />
+        </div>
 
-          <Button disabled={isSubmitting} type="submit">
-            {isSubmitting ? "Submitting..." : "Submit application"}
-          </Button>
-        </form>
-      </CardContent>
-    </Card>
+        {message && <p className="text-sm text-emerald-600">{message}</p>}
+        {error && <p className="text-sm text-destructive">{error}</p>}
+
+        <Button disabled={isSubmitting} type="submit">
+          {isSubmitting ? "Submitting..." : "Submit application"}
+        </Button>
+      </form>
+    </section>
   );
 }

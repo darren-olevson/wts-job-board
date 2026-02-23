@@ -5,7 +5,7 @@ import { jobStore } from "@/lib/services";
 import { JOB_CATEGORIES, JobListing } from "@/lib/types";
 
 const DEFAULT_ABOUT_WTS =
-  "Wealthsimple is on a mission to help everyone achieve financial freedom by reimagining what it means to manage your money.\n\nUsing smart technology, we take financial services that are often confusing and expensive and make them transparent and low-cost for everyone.";
+  "WTS builds the operational and technology backbone that powers modern fintech. We partner with product, engineering, compliance, and operations teams to launch and scale financial products-turning complex workflows (accounts, money movement, reconciliation, reporting, risk) into reliable platforms and tools.\n\n**We move fast, sweat the details, and build systems that are secure and built to last.**\n\n**What it's like to work here**\n\n**High ownership, high impact:** Small teams, real responsibility, measurable outcomes\n**Cross-functional by default:** Frequent collaboration with engineering, ops, and business stakeholders\n**Practical builders:** We favor solutions that are simple, scalable, and easy to operate\n**Mission-driven:** We help bring better financial products to market-safely and efficiently";
 
 function isEmploymentType(
   value: string,

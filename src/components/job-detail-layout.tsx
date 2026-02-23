@@ -3,7 +3,6 @@ import { ReactNode } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { JobListing } from "@/lib/types";
 
 type JobDetailLayoutProps = {
@@ -21,47 +20,48 @@ export function JobDetailLayout({
   const applicationHref = `/jobs/${job.id}/application`;
 
   return (
-    <main className="mx-auto min-h-screen max-w-4xl space-y-6 px-6 py-8">
+    <main className="mx-auto min-h-screen max-w-5xl space-y-8 px-6 py-10">
       <Button asChild variant="outline">
         <Link href="/">Back to openings</Link>
       </Button>
 
-      <Card className="overflow-hidden">
-        <CardHeader className="space-y-4 border-b bg-card/40">
-          <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge variant="secondary">{job.team}</Badge>
-              <Badge variant="outline">{job.type}</Badge>
-              <Badge variant="outline">{job.location}</Badge>
-            </div>
-            <CardTitle className="text-2xl sm:text-3xl">{job.title}</CardTitle>
+      <section className="space-y-5 border-b pb-6">
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge variant="secondary">{job.team}</Badge>
+            <Badge variant="outline">{job.type}</Badge>
+            <Badge variant="outline">{job.location}</Badge>
           </div>
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+            {job.title}
+          </h1>
+        </div>
 
-          <div className="flex gap-2 border-b">
-            <Link
-              href={descriptionHref}
-              className={`-mb-px border-b-2 px-1 pb-3 text-sm font-medium transition-colors ${
-                activeTab === "description"
-                  ? "border-primary text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Overview
-            </Link>
-            <Link
-              href={applicationHref}
-              className={`-mb-px border-b-2 px-1 pb-3 text-sm font-medium transition-colors ${
-                activeTab === "application"
-                  ? "border-primary text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Application
-            </Link>
-          </div>
-        </CardHeader>
-        <CardContent className="p-6">{children}</CardContent>
-      </Card>
+        <div className="flex gap-6 border-b">
+          <Link
+            href={descriptionHref}
+            className={`-mb-px border-b-2 px-1 pb-3 text-sm font-semibold transition-colors ${
+              activeTab === "description"
+                ? "border-primary text-foreground"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Overview
+          </Link>
+          <Link
+            href={applicationHref}
+            className={`-mb-px border-b-2 px-1 pb-3 text-sm font-semibold transition-colors ${
+              activeTab === "application"
+                ? "border-primary text-foreground"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            Application
+          </Link>
+        </div>
+      </section>
+
+      <section className="pb-8">{children}</section>
     </main>
   );
 }

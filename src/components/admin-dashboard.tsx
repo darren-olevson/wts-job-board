@@ -20,9 +20,16 @@ type AdminDashboardProps = {
   jobs: JobListing[];
 };
 
-const DEFAULT_ABOUT_WTS = `Wealthsimple is on a mission to help everyone achieve financial freedom by reimagining what it means to manage your money.
+const DEFAULT_ABOUT_WTS = `WTS builds the operational and technology backbone that powers modern fintech. We partner with product, engineering, compliance, and operations teams to launch and scale financial products-turning complex workflows (accounts, money movement, reconciliation, reporting, risk) into reliable platforms and tools.
 
-Using smart technology, we take financial services that are often confusing and expensive and make them transparent and low-cost for everyone.`;
+**We move fast, sweat the details, and build systems that are secure and built to last.**
+
+**What it's like to work here**
+
+**High ownership, high impact:** Small teams, real responsibility, measurable outcomes
+**Cross-functional by default:** Frequent collaboration with engineering, ops, and business stakeholders
+**Practical builders:** We favor solutions that are simple, scalable, and easy to operate
+**Mission-driven:** We help bring better financial products to market-safely and efficiently`;
 
 export function AdminDashboard({ jobs }: AdminDashboardProps) {
   const router = useRouter();
