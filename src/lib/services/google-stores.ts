@@ -155,7 +155,7 @@ async function createJsonFile<T>(fileName: string, data: T) {
 }
 
 async function readJsonFile<T>(fileName: string, fallback: T): Promise<T> {
-  getDrive();
+  const drive = getDrive();
   const fileId = await findFileIdByName(fileName);
 
   if (!fileId) {
