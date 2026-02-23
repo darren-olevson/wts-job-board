@@ -25,6 +25,8 @@ export type JobApplication = {
   jobTitle: string;
   fullName: string;
   email: string;
+  currentCompany: string;
+  currentLocation: string;
   roleInterest: string;
   resumeFileName: string;
   resumeFileSize: number;

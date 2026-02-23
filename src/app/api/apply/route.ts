@@ -10,45 +10,65 @@ function hasAllowedExtension(fileName: string) {
 }
 
 export async function POST(request: Request) {
-  const formData = await request.formData();
+  try {
+    const formData = await request.formData();
 
-  const fullName = String(formData.get("fullName") ?? "").trim();
-  const email = String(formData.get("email") ?? "").trim();
-  const roleInterest = String(formData.get("roleInterest") ?? "").trim();
-  const jobId = String(formData.get("jobId") ?? "").trim();
-  const jobTitle = String(formData.get("jobTitle") ?? "").trim();
-  const resume = formData.get("resume");
+    const fullName = String(formData.get("fullName") ?? "").trim();
+    const email = String(formData.get("email") ?? "").trim();
+    const currentCompany = String(formData.get("currentCompany") ?? "").trim();
+    const currentLocation = String(formData.get("currentLocation") ?? "").trim();
+    const roleInterest = String(formData.get("roleInterest") ?? "").trim();
+    const jobId = String(formData.get("jobId") ?? "").trim();
+    const jobTitle = String(formData.get("jobTitle") ?? "").trim();
+    const resume = formData.get("resume");
 
-  if (!fullName || !email || !roleInterest || !jobId || !jobTitle) {
+    if (
+      !fullName ||
+      !email ||
+      !currentCompany ||
+      !currentLocation ||
+      !roleInterest ||
+      !jobId ||
+      !jobTitle
+    ) {
+      return NextResponse.json(
+        { error: "Please complete all required fields." },
+        { status: 400 },
+      );
+    }
+
+    if (!(resume instanceof File) || resume.size === 0) {
+      return NextResponse.json(
+        { error: "Please upload a resume file." },
+        { status: 400 },
+      );
+    }
+
+    if (!hasAllowedExtension(resume.name)) {
+      return NextResponse.json(
+        { error: "Resume must be a PDF or DOCX file." },
+        { status: 400 },
+      );
+    }
+
+    await applicationStore.add({
+      jobId,
+      jobTitle,
+      fullName,
+      email,
+      currentCompany,
+      currentLocation,
+      roleInterest,
+      resumeFileName: resume.name,
+      resumeFileSize: resume.size,
+    });
+
+    return NextResponse.json({ message: "Submission successful." });
+  } catch (error) {
+    console.error("Application submission failed", error);
     return NextResponse.json(
-      { error: "Please complete all required fields." },
-      { status: 400 },
+      { error: "Unable to submit application right now. Please try again." },
+      { status: 500 },
     );
   }
-
-  if (!(resume instanceof File) || resume.size === 0) {
-    return NextResponse.json(
-      { error: "Please upload a resume file." },
-      { status: 400 },
-    );
-  }
-
-  if (!hasAllowedExtension(resume.name)) {
-    return NextResponse.json(
-      { error: "Resume must be a PDF or DOCX file." },
-      { status: 400 },
-    );
-  }
-
-  await applicationStore.add({
-    jobId,
-    jobTitle,
-    fullName,
-    email,
-    roleInterest,
-    resumeFileName: resume.name,
-    resumeFileSize: resume.size,
-  });
-
-  return NextResponse.json({ message: "Submission successful." });
 }

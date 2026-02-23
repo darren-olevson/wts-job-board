@@ -76,7 +76,7 @@ export function JobBoard({ jobs }: JobBoardProps) {
             <CardContent className="space-y-4">
               <p className="text-sm text-muted-foreground">{job.description}</p>
               <Button asChild className="w-full">
-                <Link href={`/jobs/${job.id}/apply`}>Apply now</Link>
+                <Link href={`/jobs/${job.id}`}>View role</Link>
               </Button>
             </CardContent>
           </Card>

@@ -27,13 +27,13 @@ export default async function Home() {
             Build the future of logistics with us.
           </h1>
           <p className="max-w-3xl text-blue-50">
-            Wedbush Technology Services (WTS) builds and runs the technology
-            powering the next generation of B2B fintech. We partner with
-            financial institutions and fintechs to launch and scale modern
-            investing, banking, and money movement products--combining secure
-            infrastructure, compliance-first operations, and product craft.
-            Join us to build the future of fintech alongside a fast-moving
-            team, shipping real products with real impact.
+            At Wedbush Technology Services, we are building the cloud of
+            finance: a modern, scalable platform that powers multi-asset
+            investing, self-directed and advisory tools, wealth management
+            workflows, and the next generation of financial products. Join us
+            as we replace legacy systems with real-time, cloud-native
+            infrastructure that lets builders move fast and shape the future of
+            how money works.
           </p>
         </section>
 

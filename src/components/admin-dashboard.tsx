@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { JOB_CATEGORIES, JobListing } from "@/lib/types";
 
 type AdminDashboardProps = {
@@ -23,6 +24,32 @@ export function AdminDashboard({ jobs }: AdminDashboardProps) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+
+  async function readApiError(response: Response, fallback: string) {
+    try {
+      const result = (await response.json()) as { error?: string };
+      // #region agent log
+      fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          runId: "admin-create-job-debug",
+          hypothesisId: "H6",
+          location: "src/components/admin-dashboard.tsx:30",
+          message: "Client parsed API error payload",
+          data: {
+            status: response.status,
+            apiError: result.error ?? null,
+          },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+      // #endregion
+      return result.error ?? fallback;
+    } catch {
+      return fallback;
+    }
+  }
 
   async function handleAddJob(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -40,19 +67,72 @@ export function AdminDashboard({ jobs }: AdminDashboardProps) {
     };
 
     try {
+      // #region agent log
+      fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          runId: "admin-create-job-debug",
+          hypothesisId: "H6",
+          location: "src/components/admin-dashboard.tsx:52",
+          message: "Client submitting admin create request",
+          data: {
+            team: payload.team,
+            type: payload.type,
+            titleLength: payload.title.length,
+            summaryLength: payload.summary.length,
+            descriptionLength: payload.description.length,
+          },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+      // #endregion
       const response = await fetch("/api/admin/jobs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const result = (await response.json()) as { error?: string };
+      // #region agent log
+      fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          runId: "admin-create-job-debug",
+          hypothesisId: "H6",
+          location: "src/components/admin-dashboard.tsx:58",
+          message: "Client received admin create response",
+          data: {
+            status: response.status,
+            ok: response.ok,
+          },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+      // #endregion
       if (!response.ok) {
-        setError(result.error ?? "Unable to create job.");
+        setError(await readApiError(response, "Unable to create job."));
         return;
       }
       form.reset();
       router.refresh();
-    } catch {
+    } catch (error) {
+      // #region agent log
+      fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          runId: "admin-create-job-debug",
+          hypothesisId: "H7",
+          location: "src/components/admin-dashboard.tsx:64",
+          message: "Client create request failed before response",
+          data: {
+            errorMessage:
+              error instanceof Error ? error.message : String(error),
+          },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+      // #endregion
       setError("Unable to create job.");
     } finally {
       setIsSaving(false);
@@ -65,9 +145,8 @@ export function AdminDashboard({ jobs }: AdminDashboardProps) {
       const response = await fetch(`/api/admin/jobs/${jobId}`, {
         method: "DELETE",
       });
-      const result = (await response.json()) as { error?: string };
       if (!response.ok) {
-        setError(result.error ?? "Unable to remove job.");
+        setError(await readApiError(response, "Unable to remove job."));
         return;
       }
       router.refresh();
@@ -143,7 +222,13 @@ export function AdminDashboard({ jobs }: AdminDashboardProps) {
             </div>
             <div className="grid gap-2 md:col-span-2">
               <Label htmlFor="description">Description</Label>
-              <Input id="description" name="description" required />
+              <Textarea
+                id="description"
+                name="description"
+                required
+                rows={8}
+                placeholder="Write the full job description that will appear in the Job Description tab."
+              />
             </div>
             {error && <p className="text-sm text-destructive md:col-span-2">{error}</p>}
             <Button type="submit" disabled={isSaving} className="md:col-span-2">
