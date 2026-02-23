@@ -68,6 +68,18 @@ export async function appendApplicationSubmissionRow(
 ) {
   const isConfigured = isGoogleSheetsConfigured();
   // #region agent log
+  console.info("[sheets-tracker] config check", {
+    hypothesisId: "H1",
+    isConfigured,
+    hasProjectId: Boolean(process.env.GOOGLE_PROJECT_ID),
+    hasClientEmail: Boolean(process.env.GOOGLE_CLIENT_EMAIL),
+    hasPrivateKey: Boolean(process.env.GOOGLE_PRIVATE_KEY),
+    hasSpreadsheetId: Boolean(process.env.GOOGLE_SHEETS_SPREADSHEET_ID),
+    submissionId: submission.id,
+    jobId: submission.jobId,
+  });
+  // #endregion
+  // #region agent log
   fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -89,6 +101,13 @@ export async function appendApplicationSubmissionRow(
   // #endregion
   if (!isConfigured) {
     // #region agent log
+    console.warn("[sheets-tracker] append skipped, missing config", {
+      hypothesisId: "H1",
+      submissionId: submission.id,
+      jobId: submission.jobId,
+    });
+    // #endregion
+    // #region agent log
     fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -107,6 +126,14 @@ export async function appendApplicationSubmissionRow(
 
   const sheets = getSheetsClient();
   const { spreadsheetId, sheetTabName } = getSheetsConfig();
+  // #region agent log
+  console.info("[sheets-tracker] append attempt", {
+    hypothesisId: "H2",
+    submissionId: submission.id,
+    spreadsheetIdPrefix: spreadsheetId.slice(0, 8),
+    sheetTabName,
+  });
+  // #endregion
   // #region agent log
   fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
     method: "POST",
@@ -152,6 +179,14 @@ export async function appendApplicationSubmissionRow(
       requestBody: { values },
     });
     // #region agent log
+    console.info("[sheets-tracker] append succeeded", {
+      hypothesisId: "H3",
+      submissionId: submission.id,
+      updatedRange: response.data.updates?.updatedRange ?? null,
+      updatedRows: response.data.updates?.updatedRows ?? null,
+    });
+    // #endregion
+    // #region agent log
     fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -178,6 +213,14 @@ export async function appendApplicationSubmissionRow(
       typeof (error as { status?: unknown }).status === "number"
         ? (error as { status: number }).status
         : null;
+    // #region agent log
+    console.error("[sheets-tracker] append failed", {
+      hypothesisId: "H4",
+      submissionId: submission.id,
+      status,
+      errorMessage: message,
+    });
+    // #endregion
     // #region agent log
     fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
       method: "POST",
