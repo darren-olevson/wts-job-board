@@ -7,8 +7,11 @@ export const seedJobs: JobListing[] = [
     team: "Engineering",
     location: "Remote",
     type: "Full-time",
-    summary: "Build and ship internal and client-facing logistics products.",
-    description:
+    aboutWts:
+      "WTS builds modern logistics and operations software to help teams move faster with better visibility and control.",
+    aboutTeam:
+      "The engineering team owns the core platform powering internal workflows and customer-facing experiences.",
+    aboutRole:
       "Work across Next.js and backend services to deliver high-impact features, improve reliability, and collaborate closely with operations and product teams.",
     postedAt: "2026-02-01T00:00:00.000Z",
   },
@@ -18,8 +21,11 @@ export const seedJobs: JobListing[] = [
     team: "Product Management",
     location: "Remote",
     type: "Full-time",
-    summary: "Drive roadmap execution for WTS internal operations tooling.",
-    description:
+    aboutWts:
+      "WTS builds modern logistics and operations software to help teams move faster with better visibility and control.",
+    aboutTeam:
+      "The platform product team defines and prioritizes initiatives that unlock scale across the business.",
+    aboutRole:
       "Own discovery, prioritization, and delivery for platform initiatives. Partner with design, engineering, and operations to align outcomes with company goals.",
     postedAt: "2026-02-03T00:00:00.000Z",
   },
@@ -29,8 +35,11 @@ export const seedJobs: JobListing[] = [
     team: "Design",
     location: "Remote",
     type: "Full-time",
-    summary: "Design elegant and practical workflows for logistics teams.",
-    description:
+    aboutWts:
+      "WTS builds modern logistics and operations software to help teams move faster with better visibility and control.",
+    aboutTeam:
+      "Design works closely with product and engineering to simplify complex operational workflows.",
+    aboutRole:
       "Shape experiences from concept to implementation, produce high-fidelity UI, and collaborate on research to make operational tools simple and effective.",
     postedAt: "2026-02-04T00:00:00.000Z",
   },
@@ -40,8 +49,11 @@ export const seedJobs: JobListing[] = [
     team: "Marketing",
     location: "Remote",
     type: "Full-time",
-    summary: "Scale qualified pipeline and optimize campaign performance.",
-    description:
+    aboutWts:
+      "WTS builds modern logistics and operations software to help teams move faster with better visibility and control.",
+    aboutTeam:
+      "The growth team drives awareness, demand generation, and measurable pipeline impact.",
+    aboutRole:
       "Lead multi-channel growth experiments, messaging strategy, and funnel optimization with a data-driven approach and close partnership with sales.",
     postedAt: "2026-02-05T00:00:00.000Z",
   },
@@ -51,8 +63,11 @@ export const seedJobs: JobListing[] = [
     team: "Operations",
     location: "Remote",
     type: "Full-time",
-    summary: "Coordinate cross-functional workflows to keep deliveries on track.",
-    description:
+    aboutWts:
+      "WTS builds modern logistics and operations software to help teams move faster with better visibility and control.",
+    aboutTeam:
+      "Operations coordinates execution across teams to keep service delivery consistent and reliable.",
+    aboutRole:
       "Support day-to-day operational execution, monitor service quality, and improve SOP adherence across internal and partner teams.",
     postedAt: "2026-02-06T00:00:00.000Z",
   },

@@ -58,7 +58,10 @@ export function ApplyForm({ jobId, jobTitle }: ApplyFormProps) {
       }
 
       form.reset();
-      setMessage(payload.message ?? "Submission successful.");
+      setMessage(
+        payload.message ??
+          "Your submission was successful. If you are selected, someone from our team will contact you.",
+      );
       router.refresh();
     } catch (error) {
       const details =
@@ -96,6 +99,10 @@ export function ApplyForm({ jobId, jobTitle }: ApplyFormProps) {
           <div className="grid gap-2">
             <Label htmlFor="currentLocation">Current location</Label>
             <Input id="currentLocation" name="currentLocation" required />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="referredBy">Referred by (optional)</Label>
+            <Input id="referredBy" name="referredBy" />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="roleInterest">

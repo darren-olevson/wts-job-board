@@ -35,7 +35,6 @@ export function JobDetailLayout({
               <Badge variant="outline">{job.location}</Badge>
             </div>
             <CardTitle className="text-2xl sm:text-3xl">{job.title}</CardTitle>
-            <p className="text-sm text-muted-foreground">{job.summary}</p>
           </div>
 
           <div className="flex gap-2 border-b">
@@ -47,7 +46,7 @@ export function JobDetailLayout({
                   : "border-transparent text-muted-foreground hover:text-foreground"
               }`}
             >
-              Job description
+              Overview
             </Link>
             <Link
               href={applicationHref}

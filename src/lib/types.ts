@@ -14,8 +14,11 @@ export type JobListing = {
   team: JobCategory;
   location: string;
   type: "Full-time" | "Part-time" | "Contract";
-  summary: string;
-  description: string;
+  aboutWts: string;
+  aboutTeam: string;
+  aboutRole: string;
+  summary?: string;
+  description?: string;
   postedAt: string;
 };
 
@@ -27,6 +30,7 @@ export type JobApplication = {
   email: string;
   currentCompany: string;
   currentLocation: string;
+  referredBy?: string;
   roleInterest: string;
   resumeFileName: string;
   resumeFileSize: number;

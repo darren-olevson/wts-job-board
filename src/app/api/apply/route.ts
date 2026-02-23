@@ -18,6 +18,7 @@ export async function POST(request: Request) {
     const email = String(formData.get("email") ?? "").trim();
     const currentCompany = String(formData.get("currentCompany") ?? "").trim();
     const currentLocation = String(formData.get("currentLocation") ?? "").trim();
+    const referredBy = String(formData.get("referredBy") ?? "").trim();
     const roleInterest = String(formData.get("roleInterest") ?? "").trim();
     const jobId = String(formData.get("jobId") ?? "").trim();
     const jobTitle = String(formData.get("jobTitle") ?? "").trim();
@@ -60,6 +61,7 @@ export async function POST(request: Request) {
       email,
       currentCompany,
       currentLocation,
+      referredBy: referredBy || undefined,
       roleInterest,
       resumeFileName: resume.name,
       resumeFileSize: resume.size,
@@ -69,7 +71,10 @@ export async function POST(request: Request) {
 
     await appendApplicationSubmissionRow(saved);
 
-    return NextResponse.json({ message: "Submission successful." });
+    return NextResponse.json({
+      message:
+        "Your submission was successful. If you are selected, someone from our team will contact you.",
+    });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     // #region agent log

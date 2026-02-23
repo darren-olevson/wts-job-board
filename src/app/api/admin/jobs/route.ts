@@ -4,6 +4,9 @@ import { isAdminAuthenticated } from "@/lib/server/admin-auth";
 import { jobStore } from "@/lib/services";
 import { JOB_CATEGORIES, JobListing } from "@/lib/types";
 
+const DEFAULT_ABOUT_WTS =
+  "Wealthsimple is on a mission to help everyone achieve financial freedom by reimagining what it means to manage your money.\n\nUsing smart technology, we take financial services that are often confusing and expensive and make them transparent and low-cost for everyone.";
+
 function isEmploymentType(
   value: string,
 ): value is JobListing["type"] {
@@ -20,11 +23,12 @@ export async function POST(request: Request) {
   const title = String(body.title ?? "").trim();
   const team = String(body.team ?? "").trim();
   const type = String(body.type ?? "").trim();
-  const summary = String(body.summary ?? "").trim();
-  const description = String(body.description ?? "").trim();
+  const aboutWts = String(body.aboutWts ?? "").trim() || DEFAULT_ABOUT_WTS;
+  const aboutTeam = String(body.aboutTeam ?? "").trim();
+  const aboutRole = String(body.aboutRole ?? "").trim();
   const location = "Remote";
 
-  if (!title || !team || !type || !summary || !description) {
+  if (!title || !team || !type || !aboutTeam || !aboutRole) {
     return NextResponse.json(
       { error: "All fields are required." },
       { status: 400 },
@@ -48,25 +52,18 @@ export async function POST(request: Request) {
       team: team as (typeof JOB_CATEGORIES)[number],
       location,
       type,
-      summary,
-      description,
+      aboutWts,
+      aboutTeam,
+      aboutRole,
     });
     return NextResponse.json({ job });
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
     const errorCode =
       typeof error === "object" &&
       error !== null &&
       "code" in error &&
       typeof (error as { code?: unknown }).code === "string"
         ? (error as { code: string }).code
-        : undefined;
-    const errorStatus =
-      typeof error === "object" &&
-      error !== null &&
-      "status" in error &&
-      typeof (error as { status?: unknown }).status === "number"
-        ? (error as { status: number }).status
         : undefined;
 
     if (errorCode === "EROFS" || errorCode === "EPERM") {

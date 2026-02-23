@@ -58,5 +58,15 @@
     "description": "Debug description",
     "id": "product-management-debug-test-role-1771825702474",
     "postedAt": "2026-02-23T05:48:22.474Z"
+  },
+  {
+    "title": "Debug QA Role",
+    "team": "Design",
+    "location": "Remote",
+    "type": "Part-time",
+    "summary": "QA debug summary",
+    "description": "QA debug description",
+    "id": "design-debug-qa-role-1771828274515",
+    "postedAt": "2026-02-23T06:31:14.515Z"
   }
 ]

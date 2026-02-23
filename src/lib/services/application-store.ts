@@ -7,6 +7,7 @@ export type CreateApplicationInput = {
   email: string;
   currentCompany: string;
   currentLocation: string;
+  referredBy?: string;
   roleInterest: string;
   resumeFileName: string;
   resumeFileSize: number;

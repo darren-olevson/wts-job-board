@@ -157,15 +157,13 @@ export async function appendApplicationSubmissionRow(
     [
       submission.submittedAt,
       submission.id,
-      submission.jobId,
       submission.jobTitle,
       submission.fullName,
       submission.email,
       submission.currentCompany,
       submission.currentLocation,
+      submission.referredBy ?? "",
       submission.roleInterest,
-      submission.resumeFileName,
-      String(submission.resumeFileSize),
       submission.resumeDriveFileUrl ?? "",
     ],
   ];
@@ -173,7 +171,7 @@ export async function appendApplicationSubmissionRow(
   try {
     const response = await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: `${sheetTabName}!A:L`,
+      range: `${sheetTabName}!A:J`,
       valueInputOption: "USER_ENTERED",
       insertDataOption: "INSERT_ROWS",
       requestBody: { values },

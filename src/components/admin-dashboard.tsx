@@ -20,6 +20,10 @@ type AdminDashboardProps = {
   jobs: JobListing[];
 };
 
+const DEFAULT_ABOUT_WTS = `Wealthsimple is on a mission to help everyone achieve financial freedom by reimagining what it means to manage your money.
+
+Using smart technology, we take financial services that are often confusing and expensive and make them transparent and low-cost for everyone.`;
+
 export function AdminDashboard({ jobs }: AdminDashboardProps) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
@@ -45,8 +49,9 @@ export function AdminDashboard({ jobs }: AdminDashboardProps) {
       title: String(formData.get("title") ?? ""),
       team: String(formData.get("team") ?? ""),
       type: String(formData.get("type") ?? ""),
-      summary: String(formData.get("summary") ?? ""),
-      description: String(formData.get("description") ?? ""),
+      aboutWts: String(formData.get("aboutWts") ?? ""),
+      aboutTeam: String(formData.get("aboutTeam") ?? ""),
+      aboutRole: String(formData.get("aboutRole") ?? ""),
     };
 
     try {
@@ -146,17 +151,34 @@ export function AdminDashboard({ jobs }: AdminDashboardProps) {
               </select>
             </div>
             <div className="grid gap-2 md:col-span-2">
-              <Label htmlFor="summary">Summary</Label>
-              <Input id="summary" name="summary" required />
+              <Label htmlFor="aboutWts">About WTS</Label>
+              <Textarea
+                id="aboutWts"
+                name="aboutWts"
+                required
+                rows={6}
+                defaultValue={DEFAULT_ABOUT_WTS}
+                placeholder="This section is pre-populated for all roles, but can be customized per listing."
+              />
             </div>
             <div className="grid gap-2 md:col-span-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="aboutTeam">About the Team</Label>
               <Textarea
-                id="description"
-                name="description"
+                id="aboutTeam"
+                name="aboutTeam"
                 required
-                rows={8}
-                placeholder="Write the full job description that will appear in the Job Description tab."
+                rows={5}
+                placeholder="Describe the team, mission, and how this role fits into it."
+              />
+            </div>
+            <div className="grid gap-2 md:col-span-2">
+              <Label htmlFor="aboutRole">About the Role</Label>
+              <Textarea
+                id="aboutRole"
+                name="aboutRole"
+                required
+                rows={6}
+                placeholder="Describe responsibilities, expectations, and what success looks like."
               />
             </div>
             {error && <p className="text-sm text-destructive md:col-span-2">{error}</p>}

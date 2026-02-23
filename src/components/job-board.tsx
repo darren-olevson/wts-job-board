@@ -3,12 +3,10 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -17,6 +15,18 @@ import { JOB_CATEGORIES, JobListing } from "@/lib/types";
 type JobBoardProps = {
   jobs: JobListing[];
 };
+
+function getRolePreview(job: JobListing) {
+  const source = job.aboutRole || job.description || "";
+  if (source.length <= 180) {
+    return source;
+  }
+  return `${source.slice(0, 177)}...`;
+}
+
+function getRoleMeta(job: JobListing) {
+  return [job.team, job.location, job.type].filter(Boolean).join(" • ");
+}
 
 export function JobBoard({ jobs }: JobBoardProps) {
   const [activeCategory, setActiveCategory] = useState<string>("All");
@@ -64,17 +74,12 @@ export function JobBoard({ jobs }: JobBoardProps) {
       <div className="grid gap-4 md:grid-cols-2">
         {filteredJobs.map((job) => (
           <Card key={job.id} className="border-l-4 border-l-primary">
-            <CardHeader className="space-y-2 pb-4">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="secondary">{job.team}</Badge>
-                <Badge variant="outline">{job.type}</Badge>
-                <Badge variant="outline">{job.location}</Badge>
-              </div>
+            <CardHeader className="space-y-1 pb-4">
               <CardTitle className="text-xl">{job.title}</CardTitle>
-              <CardDescription>{job.summary}</CardDescription>
+              <p className="text-sm text-muted-foreground">{getRoleMeta(job)}</p>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-sm text-muted-foreground">{job.description}</p>
+              <p className="text-sm text-muted-foreground">{getRolePreview(job)}</p>
               <Button asChild className="w-full">
                 <Link href={`/jobs/${job.id}`}>View role</Link>
               </Button>

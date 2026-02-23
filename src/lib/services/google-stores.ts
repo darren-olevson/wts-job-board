@@ -261,6 +261,7 @@ export const googleApplicationStore: ApplicationStore = {
       email: application.email,
       currentCompany: application.currentCompany,
       currentLocation: application.currentLocation,
+      referredBy: application.referredBy,
       roleInterest: application.roleInterest,
       resumeFileName: application.resumeFileName,
       resumeFileSize: application.resumeFileSize,
