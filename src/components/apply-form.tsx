@@ -79,13 +79,41 @@ export function ApplyForm({ jobId, jobTitle }: ApplyFormProps) {
       }).catch(() => {});
       // #endregion
 
-      let payload: { message?: string; error?: string } = {};
+      let payload: {
+        message?: string;
+        error?: string;
+        debug?: {
+          usingGoogleStore?: boolean;
+          resumeDriveFileId?: string | null;
+          resumeDriveFileUrl?: string | null;
+        };
+      } = {};
       const isJsonResponse = response.headers
         .get("content-type")
         ?.includes("application/json");
 
       if (isJsonResponse) {
-        payload = (await response.json()) as { message?: string; error?: string };
+        payload = (await response.json()) as typeof payload;
+        // #region agent log
+        fetch("http://127.0.0.1:7244/ingest/cb7a7420-6cbe-42cf-9e68-68cfb70269ce", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            runId: "job-apply-debug",
+            hypothesisId: "H12",
+            location: "src/components/apply-form.tsx:59",
+            message: "Client parsed apply API payload",
+            data: {
+              hasMessage: Boolean(payload.message),
+              hasError: Boolean(payload.error),
+              usingGoogleStore: payload.debug?.usingGoogleStore ?? null,
+              hasResumeDriveFileId: Boolean(payload.debug?.resumeDriveFileId),
+              resumeDriveFileId: payload.debug?.resumeDriveFileId ?? null,
+            },
+            timestamp: Date.now(),
+          }),
+        }).catch(() => {});
+        // #endregion
       }
 
       if (!response.ok) {

@@ -140,7 +140,14 @@ export async function POST(request: Request) {
       resumeDriveFileUrl: saved.resumeDriveFileUrl ?? null,
     });
 
-    return NextResponse.json({ message: "Submission successful." });
+    return NextResponse.json({
+      message: "Submission successful.",
+      debug: {
+        usingGoogleStore,
+        resumeDriveFileId: saved.resumeDriveFileId ?? null,
+        resumeDriveFileUrl: saved.resumeDriveFileUrl ?? null,
+      },
+    });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorCode =
