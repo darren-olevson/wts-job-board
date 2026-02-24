@@ -105,11 +105,11 @@ export function ApplyForm({ jobId, jobTitle }: ApplyFormProps) {
           <Input id="currentLocation" name="currentLocation" required />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="referredBy">Referred by (optional)</Label>
+          <Label htmlFor="referredBy">Referred by</Label>
           <Input id="referredBy" name="referredBy" />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="linkedinUrl">LinkedIn (optional)</Label>
+          <Label htmlFor="linkedinUrl">LinkedIn</Label>
           <Input
             id="linkedinUrl"
             name="linkedinUrl"
@@ -118,7 +118,7 @@ export function ApplyForm({ jobId, jobTitle }: ApplyFormProps) {
           />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="githubUrl">GitHub (optional)</Label>
+          <Label htmlFor="githubUrl">GitHub</Label>
           <Input
             id="githubUrl"
             name="githubUrl"
@@ -127,7 +127,7 @@ export function ApplyForm({ jobId, jobTitle }: ApplyFormProps) {
           />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="portfolioUrl">Portfolio (optional)</Label>
+          <Label htmlFor="portfolioUrl">Portfolio</Label>
           <Input
             id="portfolioUrl"
             name="portfolioUrl"
