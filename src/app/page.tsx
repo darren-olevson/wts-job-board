@@ -31,9 +31,11 @@ export default async function Home() {
             Open roles
           </h1>
           <p className="max-w-3xl text-base leading-7 text-muted-foreground">
-            Join WTS to build the operational and technology backbone powering
-            modern fintech products across product, engineering, compliance, and
-            operations.
+            We're building a new kind of cloud-for-finance, the kind the
+            platform that makes every fintech possible: banking, brokerage,
+            crypto, and capital markets on a single, modern stack. If AWS gave
+            every developer a data center, WTS gives every financial company an
+            entire operational backbone. Come join us!
           </p>
         </section>
 
