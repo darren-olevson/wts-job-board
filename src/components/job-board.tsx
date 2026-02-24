@@ -2,7 +2,7 @@
 
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { JOB_CATEGORIES, JobListing } from "@/lib/types";
@@ -13,6 +13,17 @@ type JobBoardProps = {
 
 export function JobBoard({ jobs }: JobBoardProps) {
   const [activeCategory, setActiveCategory] = useState<string>("All");
+
+  const availableCategories = useMemo(() => {
+    const teamsWithRoles = new Set(jobs.map((job) => job.team));
+    return JOB_CATEGORIES.filter((category) => teamsWithRoles.has(category));
+  }, [jobs]);
+
+  useEffect(() => {
+    if (activeCategory !== "All" && !availableCategories.includes(activeCategory as JobListing["team"])) {
+      setActiveCategory("All");
+    }
+  }, [activeCategory, availableCategories]);
 
   const filteredJobs = useMemo(() => {
     if (activeCategory === "All") {
@@ -42,7 +53,7 @@ export function JobBoard({ jobs }: JobBoardProps) {
         >
           All
         </Button>
-        {JOB_CATEGORIES.map((category) => (
+        {availableCategories.map((category) => (
           <Button
             key={category}
             variant={activeCategory === category ? "default" : "outline"}
