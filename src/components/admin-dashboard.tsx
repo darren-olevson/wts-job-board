@@ -273,18 +273,15 @@ export function AdminDashboard({ jobs }: AdminDashboardProps) {
                   {job.team} • {job.location}
                 </p>
               </div>
-              <Button
-                variant="outline"
-                onClick={() => openEditDialog(job)}
-              >
-                Edit
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={() => setJobPendingRemoval(job)}
-              >
-                Remove
-              </Button>
+              <div className="ml-auto flex items-center gap-2">
+                <Button onClick={() => openEditDialog(job)}>Edit</Button>
+                <Button
+                  variant="destructive"
+                  onClick={() => setJobPendingRemoval(job)}
+                >
+                  Remove
+                </Button>
+              </div>
             </div>
           ))}
           {jobs.length === 0 && (

@@ -81,7 +81,8 @@ function renderRichText(
       continue;
     }
 
-    const bulletMatch = line.match(/^[-*]+\s*(.+)$/);
+    // Treat only true list markers as bullets so markdown bold (`**text**`) remains intact.
+    const bulletMatch = line.match(/^(?:[-•]\s+|\*\s+)(.+)$/);
     if (bulletMatch) {
       flushParagraph();
       bulletItems.push(bulletMatch[1]);
