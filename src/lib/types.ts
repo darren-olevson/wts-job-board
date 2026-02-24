@@ -1,9 +1,8 @@
 export const JOB_CATEGORIES = [
   "Engineering",
-  "Product Management",
+  "Product",
   "Design",
   "Marketing",
-  "Operations",
 ] as const;
 
 export type JobCategory = (typeof JOB_CATEGORIES)[number];

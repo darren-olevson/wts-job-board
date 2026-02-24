@@ -12,7 +12,7 @@
   {
     "id": "pm-platform-01",
     "title": "Product Manager, Platform",
-    "team": "Product Management",
+    "team": "Product",
     "location": "Remote",
     "type": "Full-time",
     "summary": "Drive roadmap execution for WTS internal operations tooling.",
@@ -40,18 +40,8 @@
     "postedAt": "2026-02-05T00:00:00.000Z"
   },
   {
-    "id": "ops-coordinator-01",
-    "title": "Operations Coordinator",
-    "team": "Operations",
-    "location": "Remote",
-    "type": "Full-time",
-    "summary": "Coordinate cross-functional workflows to keep deliveries on track.",
-    "description": "Support day-to-day operational execution, monitor service quality, and improve SOP adherence across internal and partner teams.",
-    "postedAt": "2026-02-06T00:00:00.000Z"
-  },
-  {
     "title": "Debug Test Role",
-    "team": "Product Management",
+    "team": "Product",
     "location": "Remote",
     "type": "Full-time",
     "summary": "Debug summary",

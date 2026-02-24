@@ -176,6 +176,20 @@ function makeJobId(team: string, title: string) {
   return `${clean}-${Date.now()}`;
 }
 
+function normalizeStoredJob(job: JobListing): JobListing | null {
+  const legacyTeam = String((job as { team?: unknown }).team ?? "");
+  if (legacyTeam === "Operations") {
+    return null;
+  }
+  if (legacyTeam === "Product Management") {
+    return {
+      ...job,
+      team: "Product",
+    };
+  }
+  return job;
+}
+
 function makeSubmissionId(jobId: string) {
   return `${jobId}-${Date.now()}`;
 }
@@ -223,7 +237,10 @@ async function uploadResumeToDrive(
 export const googleJobStore: JobStore = {
   async list() {
     const jobs = await readJsonFile<JobListing[]>(getJobsFileName(), seedJobs);
-    return jobs.sort((a, b) => +new Date(b.postedAt) - +new Date(a.postedAt));
+    return jobs
+      .map((job) => normalizeStoredJob(job as JobListing))
+      .filter((job): job is JobListing => Boolean(job))
+      .sort((a, b) => +new Date(b.postedAt) - +new Date(a.postedAt));
   },
   async add(job) {
     const jobs = await readJsonFile<JobListing[]>(getJobsFileName(), seedJobs);

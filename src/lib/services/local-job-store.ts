@@ -10,10 +10,27 @@ function makeId(team: string, title: string) {
   return `${clean}-${Date.now()}`;
 }
 
+function normalizeStoredJob(job: JobListing): JobListing | null {
+  const legacyTeam = String((job as { team?: unknown }).team ?? "");
+  if (legacyTeam === "Operations") {
+    return null;
+  }
+  if (legacyTeam === "Product Management") {
+    return {
+      ...job,
+      team: "Product",
+    };
+  }
+  return job;
+}
+
 export const localJobStore: JobStore = {
   async list() {
     const jobs = await getJobs();
-    return jobs.sort((a, b) => +new Date(b.postedAt) - +new Date(a.postedAt));
+    return jobs
+      .map((job) => normalizeStoredJob(job as JobListing))
+      .filter((job): job is JobListing => Boolean(job))
+      .sort((a, b) => +new Date(b.postedAt) - +new Date(a.postedAt));
   },
   async add(job) {
     const jobs = await getJobs();

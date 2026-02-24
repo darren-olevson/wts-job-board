@@ -18,7 +18,7 @@ export const seedJobs: JobListing[] = [
   {
     id: "pm-platform-01",
     title: "Product Manager, Platform",
-    team: "Product Management",
+    team: "Product",
     location: "Remote",
     type: "Full-time",
     aboutWts: DEFAULT_ABOUT_WTS,
@@ -53,18 +53,5 @@ export const seedJobs: JobListing[] = [
     aboutRole:
       "Lead multi-channel growth experiments, messaging strategy, and funnel optimization with a data-driven approach and close partnership with sales.",
     postedAt: "2026-02-05T00:00:00.000Z",
-  },
-  {
-    id: "ops-coordinator-01",
-    title: "Operations Coordinator",
-    team: "Operations",
-    location: "Remote",
-    type: "Full-time",
-    aboutWts: DEFAULT_ABOUT_WTS,
-    aboutTeam:
-      "Operations coordinates execution across teams to keep service delivery consistent and reliable.",
-    aboutRole:
-      "Support day-to-day operational execution, monitor service quality, and improve SOP adherence across internal and partner teams.",
-    postedAt: "2026-02-06T00:00:00.000Z",
   },
 ];
