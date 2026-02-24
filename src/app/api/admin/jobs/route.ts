@@ -22,11 +22,10 @@ export async function POST(request: Request) {
   const team = String(body.team ?? "").trim();
   const type = String(body.type ?? "").trim();
   const aboutWts = String(body.aboutWts ?? "").trim() || DEFAULT_ABOUT_WTS;
-  const aboutTeam = String(body.aboutTeam ?? "").trim();
   const aboutRole = String(body.aboutRole ?? "").trim();
   const location = "Remote";
 
-  if (!title || !team || !type || !aboutTeam || !aboutRole) {
+  if (!title || !team || !type || !aboutRole) {
     return NextResponse.json(
       { error: "All fields are required." },
       { status: 400 },
@@ -51,7 +50,7 @@ export async function POST(request: Request) {
       location,
       type,
       aboutWts,
-      aboutTeam,
+      aboutTeam: "",
       aboutRole,
     });
     return NextResponse.json({ job });

@@ -18,56 +18,95 @@ const ABOUT_WTS_BULLET_LABELS = new Set([
   "Cross-functional by default",
 ]);
 
-function renderAboutWts(aboutWts: string) {
-  const lines = aboutWts
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
+function renderInlineFormatting(text: string) {
   const nodes: ReactNode[] = [];
-  const bulletItems: Array<{ label: string; body: string }> = [];
+  const pattern = /\*\*(.+?)\*\*/g;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null = pattern.exec(text);
 
-  const flushBulletItems = () => {
+  while (match) {
+    if (match.index > lastIndex) {
+      nodes.push(text.slice(lastIndex, match.index));
+    }
+    nodes.push(<strong key={`strong-${match.index}`}>{match[1]}</strong>);
+    lastIndex = pattern.lastIndex;
+    match = pattern.exec(text);
+  }
+
+  if (lastIndex < text.length) {
+    nodes.push(text.slice(lastIndex));
+  }
+
+  return nodes;
+}
+
+function renderRichText(
+  text: string,
+  options?: { promoteColonLabelsToBullets?: Set<string> },
+) {
+  const lines = text.split("\n");
+  const nodes: ReactNode[] = [];
+  const bulletItems: string[] = [];
+  const paragraphLines: string[] = [];
+
+  const flushList = () => {
     if (bulletItems.length === 0) {
       return;
     }
     nodes.push(
       <ul key={`list-${nodes.length}`} className="list-disc space-y-1 pl-6">
         {bulletItems.map((item, index) => (
-          <li key={`${item.label}-${index}`}>
-            <strong>{item.label}:</strong> {item.body}
-          </li>
+          <li key={`item-${index}`}>{renderInlineFormatting(item)}</li>
         ))}
       </ul>,
     );
-    bulletItems.splice(0, bulletItems.length);
+    bulletItems.length = 0;
   };
 
-  for (const line of lines) {
-    const normalized = line.replace(/^[*-]\s*/, "");
-    const markdownBulletMatch = normalized.match(/^\*\*(.+?)\*\*:\s*(.+)$/);
-    if (markdownBulletMatch) {
-      bulletItems.push({
-        label: markdownBulletMatch[1],
-        body: markdownBulletMatch[2],
-      });
+  const flushParagraph = () => {
+    if (paragraphLines.length === 0) {
+      return;
+    }
+    nodes.push(
+      <p key={`p-${nodes.length}`}>{renderInlineFormatting(paragraphLines.join(" "))}</p>,
+    );
+    paragraphLines.length = 0;
+  };
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) {
+      flushParagraph();
+      flushList();
       continue;
     }
 
-    const colonIndex = normalized.indexOf(":");
-    if (colonIndex > 0) {
-      const label = normalized.slice(0, colonIndex).trim();
-      const body = normalized.slice(colonIndex + 1).trim();
-      if (ABOUT_WTS_BULLET_LABELS.has(label) && body) {
-        bulletItems.push({ label, body });
-        continue;
+    const bulletMatch = line.match(/^[-*]+\s*(.+)$/);
+    if (bulletMatch) {
+      flushParagraph();
+      bulletItems.push(bulletMatch[1]);
+      continue;
+    }
+
+    if (options?.promoteColonLabelsToBullets) {
+      const colonIndex = line.indexOf(":");
+      if (colonIndex > 0) {
+        const label = line.slice(0, colonIndex).trim();
+        if (options.promoteColonLabelsToBullets.has(label)) {
+          const body = line.slice(colonIndex + 1).trim();
+          flushParagraph();
+          bulletItems.push(`**${label}:** ${body}`);
+          continue;
+        }
       }
     }
 
-    flushBulletItems();
-    nodes.push(<p key={`p-${nodes.length}`}>{normalized}</p>);
+    flushList();
+    paragraphLines.push(line);
   }
 
-  flushBulletItems();
+  flushParagraph();
+  flushList();
   return nodes;
 }
 
@@ -85,7 +124,6 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
     !savedAboutWts || savedAboutWts === LEGACY_ABOUT_WTS
       ? DEFAULT_ABOUT_WTS
       : savedAboutWts;
-  const aboutTeam = job.aboutTeam?.trim() || job.summary?.trim() || "";
   const aboutRole = job.aboutRole?.trim() || job.description?.trim() || "";
 
   return (
@@ -93,17 +131,16 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
       <article className="space-y-10 text-sm leading-7 text-foreground/90">
         <section className="space-y-3">
           <h3 className="text-2xl font-semibold text-foreground">About WTS</h3>
-          <div className="space-y-4">{renderAboutWts(aboutWts)}</div>
-        </section>
-
-        <section className="space-y-3">
-          <h3 className="text-2xl font-semibold text-foreground">About the Team</h3>
-          <p className="whitespace-pre-line">{aboutTeam}</p>
+          <div className="space-y-4">
+            {renderRichText(aboutWts, {
+              promoteColonLabelsToBullets: ABOUT_WTS_BULLET_LABELS,
+            })}
+          </div>
         </section>
 
         <section className="space-y-3">
           <h3 className="text-2xl font-semibold text-foreground">About the Role</h3>
-          <p className="whitespace-pre-line">{aboutRole}</p>
+          <div className="space-y-4">{renderRichText(aboutRole)}</div>
         </section>
       </article>
     </JobDetailLayout>

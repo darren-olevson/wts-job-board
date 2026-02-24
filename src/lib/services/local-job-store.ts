@@ -26,6 +26,22 @@ export const localJobStore: JobStore = {
     await saveJobs(jobs);
     return nextJob;
   },
+  async update(jobId, job) {
+    const jobs = await getJobs();
+    const index = jobs.findIndex((item) => item.id === jobId);
+    if (index === -1) {
+      return null;
+    }
+    const updated: JobListing = {
+      ...jobs[index],
+      ...job,
+      id: jobs[index].id,
+      postedAt: jobs[index].postedAt,
+    };
+    jobs[index] = updated;
+    await saveJobs(jobs);
+    return updated;
+  },
   async remove(jobId) {
     const jobs = await getJobs();
     const nextJobs = jobs.filter((job) => job.id !== jobId);

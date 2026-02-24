@@ -11,6 +11,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -21,10 +29,33 @@ type AdminDashboardProps = {
   jobs: JobListing[];
 };
 
+const EMPLOYMENT_TYPES: JobListing["type"][] = [
+  "Full-time",
+  "Part-time",
+  "Contract",
+];
+
+type EditJobFormState = {
+  id: string;
+  title: string;
+  team: JobListing["team"];
+  type: JobListing["type"];
+  aboutWts: string;
+  aboutRole: string;
+};
+
 export function AdminDashboard({ jobs }: AdminDashboardProps) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [jobPendingEdit, setJobPendingEdit] = useState<EditJobFormState | null>(
+    null,
+  );
+  const [jobPendingRemoval, setJobPendingRemoval] = useState<JobListing | null>(
+    null,
+  );
 
   async function readApiError(response: Response, fallback: string) {
     try {
@@ -47,7 +78,6 @@ export function AdminDashboard({ jobs }: AdminDashboardProps) {
       team: String(formData.get("team") ?? ""),
       type: String(formData.get("type") ?? ""),
       aboutWts: String(formData.get("aboutWts") ?? ""),
-      aboutTeam: String(formData.get("aboutTeam") ?? ""),
       aboutRole: String(formData.get("aboutRole") ?? ""),
     };
 
@@ -72,6 +102,7 @@ export function AdminDashboard({ jobs }: AdminDashboardProps) {
 
   async function handleRemoveJob(jobId: string) {
     setError(null);
+    setIsRemoving(true);
     try {
       const response = await fetch(`/api/admin/jobs/${jobId}`, {
         method: "DELETE",
@@ -81,8 +112,58 @@ export function AdminDashboard({ jobs }: AdminDashboardProps) {
         return;
       }
       router.refresh();
+      setJobPendingRemoval(null);
     } catch {
       setError("Unable to remove job.");
+    } finally {
+      setIsRemoving(false);
+    }
+  }
+
+  function openEditDialog(job: JobListing) {
+    setError(null);
+    setJobPendingEdit({
+      id: job.id,
+      title: job.title,
+      team: job.team,
+      type: job.type,
+      aboutWts: job.aboutWts || DEFAULT_ABOUT_WTS,
+      aboutRole: job.aboutRole,
+    });
+  }
+
+  async function handleUpdateJob(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!jobPendingEdit) {
+      return;
+    }
+    setError(null);
+    setIsUpdating(true);
+
+    try {
+      const response = await fetch(`/api/admin/jobs/${jobPendingEdit.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: jobPendingEdit.title,
+          team: jobPendingEdit.team,
+          type: jobPendingEdit.type,
+          aboutWts: jobPendingEdit.aboutWts,
+          aboutRole: jobPendingEdit.aboutRole,
+        }),
+      });
+
+      if (!response.ok) {
+        setError(await readApiError(response, "Unable to update job."));
+        return;
+      }
+
+      setJobPendingEdit(null);
+      router.refresh();
+    } catch {
+      setError("Unable to update job.");
+    } finally {
+      setIsUpdating(false);
     }
   }
 
@@ -159,16 +240,6 @@ export function AdminDashboard({ jobs }: AdminDashboardProps) {
               />
             </div>
             <div className="grid gap-2 md:col-span-2">
-              <Label htmlFor="aboutTeam">About the Team</Label>
-              <Textarea
-                id="aboutTeam"
-                name="aboutTeam"
-                required
-                rows={5}
-                placeholder="Describe the team, mission, and how this role fits into it."
-              />
-            </div>
-            <div className="grid gap-2 md:col-span-2">
               <Label htmlFor="aboutRole">About the Role</Label>
               <Textarea
                 id="aboutRole"
@@ -202,7 +273,16 @@ export function AdminDashboard({ jobs }: AdminDashboardProps) {
                   {job.team} • {job.location}
                 </p>
               </div>
-              <Button variant="destructive" onClick={() => handleRemoveJob(job.id)}>
+              <Button
+                variant="outline"
+                onClick={() => openEditDialog(job)}
+              >
+                Edit
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => setJobPendingRemoval(job)}
+              >
                 Remove
               </Button>
             </div>
@@ -212,6 +292,188 @@ export function AdminDashboard({ jobs }: AdminDashboardProps) {
           )}
         </CardContent>
       </Card>
+
+      <Dialog
+        open={Boolean(jobPendingEdit)}
+        onOpenChange={(open) => {
+          if (!open && !isUpdating) {
+            setJobPendingEdit(null);
+          }
+        }}
+      >
+        <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit listing</DialogTitle>
+            <DialogDescription>
+              Update the role details and save your changes.
+            </DialogDescription>
+          </DialogHeader>
+          {jobPendingEdit && (
+            <form onSubmit={handleUpdateJob} className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="edit-title">Title</Label>
+                <Input
+                  id="edit-title"
+                  value={jobPendingEdit.title}
+                  onChange={(event) =>
+                    setJobPendingEdit((prev) =>
+                      prev
+                        ? {
+                            ...prev,
+                            title: event.target.value,
+                          }
+                        : prev,
+                    )
+                  }
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="edit-team">Team</Label>
+                <select
+                  id="edit-team"
+                  className="h-9 rounded-md border bg-transparent px-3 text-sm"
+                  value={jobPendingEdit.team}
+                  onChange={(event) =>
+                    setJobPendingEdit((prev) =>
+                      prev
+                        ? {
+                            ...prev,
+                            team: event.target.value as JobListing["team"],
+                          }
+                        : prev,
+                    )
+                  }
+                >
+                  {JOB_CATEGORIES.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="edit-type">Employment type</Label>
+                <select
+                  id="edit-type"
+                  className="h-9 rounded-md border bg-transparent px-3 text-sm"
+                  value={jobPendingEdit.type}
+                  onChange={(event) =>
+                    setJobPendingEdit((prev) =>
+                      prev
+                        ? {
+                            ...prev,
+                            type: event.target.value as JobListing["type"],
+                          }
+                        : prev,
+                    )
+                  }
+                >
+                  {EMPLOYMENT_TYPES.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="edit-aboutWts">About WTS</Label>
+                <Textarea
+                  id="edit-aboutWts"
+                  rows={6}
+                  value={jobPendingEdit.aboutWts}
+                  onChange={(event) =>
+                    setJobPendingEdit((prev) =>
+                      prev
+                        ? {
+                            ...prev,
+                            aboutWts: event.target.value,
+                          }
+                        : prev,
+                    )
+                  }
+                  required
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="edit-aboutRole">About the Role</Label>
+                <Textarea
+                  id="edit-aboutRole"
+                  rows={6}
+                  value={jobPendingEdit.aboutRole}
+                  onChange={(event) =>
+                    setJobPendingEdit((prev) =>
+                      prev
+                        ? {
+                            ...prev,
+                            aboutRole: event.target.value,
+                          }
+                        : prev,
+                    )
+                  }
+                  required
+                />
+              </div>
+              {error && <p className="text-sm text-destructive">{error}</p>}
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={isUpdating}
+                  onClick={() => setJobPendingEdit(null)}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isUpdating}>
+                  {isUpdating ? "Saving..." : "Save changes"}
+                </Button>
+              </DialogFooter>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={Boolean(jobPendingRemoval)}
+        onOpenChange={(open) => {
+          if (!open && !isRemoving) {
+            setJobPendingRemoval(null);
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Remove this role?</DialogTitle>
+            <DialogDescription>
+              {jobPendingRemoval
+                ? `Are you sure you want to remove "${jobPendingRemoval.title}"? This action cannot be undone.`
+                : "Are you sure you want to remove this role?"}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={isRemoving}
+              onClick={() => setJobPendingRemoval(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              disabled={isRemoving || !jobPendingRemoval}
+              onClick={() =>
+                jobPendingRemoval
+                  ? handleRemoveJob(jobPendingRemoval.id)
+                  : undefined
+              }
+            >
+              {isRemoving ? "Removing..." : "Remove role"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
