@@ -130,6 +130,12 @@
   h3,
   h4 {
     @apply tracking-tight;
-    font-family: var(--font-heading), var(--font-sans), sans-serif;
   }
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-sora), sans-serif !important;
 }
