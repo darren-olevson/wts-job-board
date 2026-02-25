@@ -18,8 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "WTS Internal Job Board",
-  description: "Internal WTS job board and applicant tracking web app.",
+  title: "WTS Careers",
 };
 
 export default function RootLayout({
