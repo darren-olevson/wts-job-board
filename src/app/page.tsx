@@ -24,7 +24,7 @@ export default async function Home() {
 
       <main className="mx-auto max-w-6xl space-y-10 px-6 py-12">
         <section className="space-y-4 border-b pb-8">
-          <p className="text-sm font-medium uppercase tracking-[0.18em] text-primary">
+          <p className="font-mono text-sm font-medium uppercase tracking-[0.18em] text-primary">
             Careers
           </p>
           <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">

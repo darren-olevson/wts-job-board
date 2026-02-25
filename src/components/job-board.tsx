@@ -73,7 +73,7 @@ export function JobBoard({ jobs }: JobBoardProps) {
 
       {filteredJobs.length > 0 && (
         <div className="overflow-hidden rounded-xl border bg-background">
-          <div className="hidden grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_auto] gap-4 border-b bg-muted/40 px-5 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground md:grid">
+          <div className="hidden grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)_auto] gap-4 border-b bg-muted/40 px-5 py-3 font-mono text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground md:grid">
             <p>Role</p>
             <p>Team</p>
             <p>Location</p>
