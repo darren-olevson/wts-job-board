@@ -3,55 +3,51 @@ import { JobListing } from "@/lib/types";
 
 export const seedJobs: JobListing[] = [
   {
-    id: "eng-fullstack-01",
-    title: "Full Stack Engineer",
-    team: "Engineering",
-    location: "Remote",
-    type: "Full-time",
-    aboutWts: DEFAULT_ABOUT_WTS,
-    aboutTeam:
-      "The engineering team owns the core platform powering internal workflows and customer-facing experiences.",
-    aboutRole:
-      "Work across Next.js and backend services to deliver high-impact features, improve reliability, and collaborate closely with operations and product teams.",
-    postedAt: "2026-02-01T00:00:00.000Z",
-  },
-  {
-    id: "pm-platform-01",
-    title: "Product Manager, Platform",
+    id: "product-product-operations-manager-01",
+    title: "Product Operations Manager",
     team: "Product",
     location: "Remote",
     type: "Full-time",
     aboutWts: DEFAULT_ABOUT_WTS,
-    aboutTeam:
-      "The platform product team defines and prioritizes initiatives that unlock scale across the business.",
+    aboutTeam: "",
+    aboutRole:
+      "Drive operational excellence across product workflows, tooling, and cross-functional processes. You'll partner closely with product managers, engineers, and business stakeholders to streamline how we build and ship.",
+    postedAt: "2026-02-20T00:00:00.000Z",
+  },
+  {
+    id: "product-senior-product-manager-01",
+    title: "Senior Product Manager",
+    team: "Product",
+    location: "Remote",
+    type: "Full-time",
+    aboutWts: DEFAULT_ABOUT_WTS,
+    aboutTeam: "",
     aboutRole:
       "Own discovery, prioritization, and delivery for platform initiatives. Partner with design, engineering, and operations to align outcomes with company goals.",
-    postedAt: "2026-02-03T00:00:00.000Z",
+    postedAt: "2026-02-19T00:00:00.000Z",
   },
   {
-    id: "design-product-01",
-    title: "Product Designer",
-    team: "Design",
+    id: "eng-senior-software-engineer-01",
+    title: "Senior Software Engineer",
+    team: "Engineering",
     location: "Remote",
     type: "Full-time",
     aboutWts: DEFAULT_ABOUT_WTS,
-    aboutTeam:
-      "Design works closely with product and engineering to simplify complex operational workflows.",
+    aboutTeam: "",
     aboutRole:
-      "Shape experiences from concept to implementation, produce high-fidelity UI, and collaborate on research to make operational tools simple and effective.",
-    postedAt: "2026-02-04T00:00:00.000Z",
+      "Build and scale backend services and client-facing products. Work across the stack to deliver high-impact features, improve reliability, and collaborate closely with product and operations teams.",
+    postedAt: "2026-02-18T00:00:00.000Z",
   },
   {
-    id: "marketing-growth-01",
-    title: "Growth Marketing Manager",
-    team: "Marketing",
+    id: "eng-ios-software-engineer-01",
+    title: "Intermediate/Senior iOS Software Engineer",
+    team: "Engineering",
     location: "Remote",
     type: "Full-time",
     aboutWts: DEFAULT_ABOUT_WTS,
-    aboutTeam:
-      "The growth team drives awareness, demand generation, and measurable pipeline impact.",
+    aboutTeam: "",
     aboutRole:
-      "Lead multi-channel growth experiments, messaging strategy, and funnel optimization with a data-driven approach and close partnership with sales.",
-    postedAt: "2026-02-05T00:00:00.000Z",
+      "Design, build, and ship native iOS experiences for WTS products. Collaborate with product and backend teams to deliver performant, polished mobile applications.",
+    postedAt: "2026-02-17T00:00:00.000Z",
   },
 ];

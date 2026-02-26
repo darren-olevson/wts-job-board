@@ -1,62 +1,46 @@
 [
   {
-    "id": "eng-fullstack-01",
-    "title": "Full Stack Engineer",
+    "id": "product-product-operations-manager-01",
+    "title": "Product Operations Manager",
+    "team": "Product",
+    "location": "Remote",
+    "type": "Full-time",
+    "aboutWts": "WTS builds the operational and technology backbone that powers modern fintech. We partner with product, engineering, compliance, and operations teams to launch and scale financial products-turning complex workflows (accounts, money movement, reconciliation, reporting, risk) into reliable platforms and tools.\n\nWe move fast, sweat the details, and build systems that are secure and built to last.\n\nWhat it's like to work here\n\n- **High impact:** Small teams, real responsibility, measurable outcomes\n- **Cross-functional:** Frequent collaboration with engineering, ops, and business stakeholders\n- **Practical builders:** We favor solutions that are simple, scalable, and easy to operate\n- **Mission-driven:** We help bring better financial products to market-safely and efficiently",
+    "aboutTeam": "",
+    "aboutRole": "Drive operational excellence across product workflows, tooling, and cross-functional processes. You'll partner closely with product managers, engineers, and business stakeholders to streamline how we build and ship.",
+    "postedAt": "2026-02-20T00:00:00.000Z"
+  },
+  {
+    "id": "product-senior-product-manager-01",
+    "title": "Senior Product Manager",
+    "team": "Product",
+    "location": "Remote",
+    "type": "Full-time",
+    "aboutWts": "WTS builds the operational and technology backbone that powers modern fintech. We partner with product, engineering, compliance, and operations teams to launch and scale financial products-turning complex workflows (accounts, money movement, reconciliation, reporting, risk) into reliable platforms and tools.\n\nWe move fast, sweat the details, and build systems that are secure and built to last.\n\nWhat it's like to work here\n\n- **High impact:** Small teams, real responsibility, measurable outcomes\n- **Cross-functional:** Frequent collaboration with engineering, ops, and business stakeholders\n- **Practical builders:** We favor solutions that are simple, scalable, and easy to operate\n- **Mission-driven:** We help bring better financial products to market-safely and efficiently",
+    "aboutTeam": "",
+    "aboutRole": "Own discovery, prioritization, and delivery for platform initiatives. Partner with design, engineering, and operations to align outcomes with company goals.",
+    "postedAt": "2026-02-19T00:00:00.000Z"
+  },
+  {
+    "id": "eng-senior-software-engineer-01",
+    "title": "Senior Software Engineer",
     "team": "Engineering",
     "location": "Remote",
     "type": "Full-time",
-    "summary": "Build and ship internal and client-facing logistics products.",
-    "description": "Work across Next.js and backend services to deliver high-impact features, improve reliability, and collaborate closely with operations and product teams.",
-    "postedAt": "2026-02-01T00:00:00.000Z"
+    "aboutWts": "WTS builds the operational and technology backbone that powers modern fintech. We partner with product, engineering, compliance, and operations teams to launch and scale financial products-turning complex workflows (accounts, money movement, reconciliation, reporting, risk) into reliable platforms and tools.\n\nWe move fast, sweat the details, and build systems that are secure and built to last.\n\nWhat it's like to work here\n\n- **High impact:** Small teams, real responsibility, measurable outcomes\n- **Cross-functional:** Frequent collaboration with engineering, ops, and business stakeholders\n- **Practical builders:** We favor solutions that are simple, scalable, and easy to operate\n- **Mission-driven:** We help bring better financial products to market-safely and efficiently",
+    "aboutTeam": "",
+    "aboutRole": "Build and scale backend services and client-facing products. Work across the stack to deliver high-impact features, improve reliability, and collaborate closely with product and operations teams.",
+    "postedAt": "2026-02-18T00:00:00.000Z"
   },
   {
-    "id": "pm-platform-01",
-    "title": "Product Manager, Platform",
-    "team": "Product",
+    "id": "eng-ios-software-engineer-01",
+    "title": "Intermediate/Senior iOS Software Engineer",
+    "team": "Engineering",
     "location": "Remote",
     "type": "Full-time",
-    "summary": "Drive roadmap execution for WTS internal operations tooling.",
-    "description": "Own discovery, prioritization, and delivery for platform initiatives. Partner with design, engineering, and operations to align outcomes with company goals.",
-    "postedAt": "2026-02-03T00:00:00.000Z"
-  },
-  {
-    "id": "design-product-01",
-    "title": "Product Designer",
-    "team": "Design",
-    "location": "Remote",
-    "type": "Full-time",
-    "summary": "Design elegant and practical workflows for logistics teams.",
-    "description": "Shape experiences from concept to implementation, produce high-fidelity UI, and collaborate on research to make operational tools simple and effective.",
-    "postedAt": "2026-02-04T00:00:00.000Z"
-  },
-  {
-    "id": "marketing-growth-01",
-    "title": "Growth Marketing Manager",
-    "team": "Marketing",
-    "location": "Remote",
-    "type": "Full-time",
-    "summary": "Scale qualified pipeline and optimize campaign performance.",
-    "description": "Lead multi-channel growth experiments, messaging strategy, and funnel optimization with a data-driven approach and close partnership with sales.",
-    "postedAt": "2026-02-05T00:00:00.000Z"
-  },
-  {
-    "title": "Debug Test Role",
-    "team": "Product",
-    "location": "Remote",
-    "type": "Full-time",
-    "summary": "Debug summary",
-    "description": "Debug description",
-    "id": "product-management-debug-test-role-1771825702474",
-    "postedAt": "2026-02-23T05:48:22.474Z"
-  },
-  {
-    "title": "Debug QA Role",
-    "team": "Design",
-    "location": "Remote",
-    "type": "Part-time",
-    "summary": "QA debug summary",
-    "description": "QA debug description",
-    "id": "design-debug-qa-role-1771828274515",
-    "postedAt": "2026-02-23T06:31:14.515Z"
+    "aboutWts": "WTS builds the operational and technology backbone that powers modern fintech. We partner with product, engineering, compliance, and operations teams to launch and scale financial products-turning complex workflows (accounts, money movement, reconciliation, reporting, risk) into reliable platforms and tools.\n\nWe move fast, sweat the details, and build systems that are secure and built to last.\n\nWhat it's like to work here\n\n- **High impact:** Small teams, real responsibility, measurable outcomes\n- **Cross-functional:** Frequent collaboration with engineering, ops, and business stakeholders\n- **Practical builders:** We favor solutions that are simple, scalable, and easy to operate\n- **Mission-driven:** We help bring better financial products to market-safely and efficiently",
+    "aboutTeam": "",
+    "aboutRole": "Design, build, and ship native iOS experiences for WTS products. Collaborate with product and backend teams to deliver performant, polished mobile applications.",
+    "postedAt": "2026-02-17T00:00:00.000Z"
   }
 ]
