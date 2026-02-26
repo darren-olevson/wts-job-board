@@ -35,7 +35,7 @@ export async function sendApplicationNotification(
   if (application.linkedinUrl) lines.push(row("LinkedIn", link(application.linkedinUrl)));
   if (application.githubUrl) lines.push(row("GitHub", link(application.githubUrl)));
   if (application.portfolioUrl) lines.push(row("Portfolio", link(application.portfolioUrl)));
-  if (application.resumeUrl) lines.push(row("Resume", link(application.resumeUrl)));
+  if (application.resumeDriveFileUrl) lines.push(row("Resume", link(application.resumeDriveFileUrl)));
 
   lines.push(row("Submitted", new Date(application.submittedAt).toLocaleString()));
   lines.push(`</table>`);
